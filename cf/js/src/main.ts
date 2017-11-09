@@ -14,7 +14,7 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 app.use('/v1', RootRouter.getRouter());
 
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
   // APIでどのクライアントに投げるかを判定する
   wss.clients.forEach(v => {
     v.send("Express!!");
@@ -22,7 +22,7 @@ app.get('/', function (req, res) {
   res.send('Hello World!');
 });
 
-const server = app.listen(3000, function () {
+const server = app.listen(process.env.PORT || 3000, () => {
   console.log('Example app listening on port 3000!');
 });
 const wss = new WebSocket.Server({server: server});
@@ -31,20 +31,22 @@ const wss = new WebSocket.Server({server: server});
 // Websocketのサーバー側の実装
 // ===============================================
 
-var connections = [];
-wss.on('connection', (ws) => {
+let connections: WebSocket[] = [];
+wss.on('connection', (ws: WebSocket) => {
   console.log("[SERVER] connection: ");
   connections.push(ws);
-  ws.on('message', function(message) {
-    console.log('[SERVER] received: %s', message);
+  ws.on('message', (message) => {
+    console.log(`[SERVER] received: ${message}`);
     // クライアントからのアクションを基に、操作を行う
-    connections.forEach(function(c) {
+    connections.forEach((c) => {
       c.send("Parrot: " + message);
     });
-  }).on('close', function () {
-    console.log('[SERVER] closed');
-    connections = connections.filter(function (conn, i) {
-      return (conn === ws) ? false : true;
+  }).on('close', (code: string, reason: string) => {
+    console.log(`[SERVER] close = ${code}, reason = ${reason}`);
+    connections = connections.filter((c, i) => {
+      return (c === ws) ? false : true;
     });
   });
+}).on('error', (err) => {
+  console.log(`[SERVER] error ${err}`);
 });
