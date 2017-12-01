@@ -1,8 +1,10 @@
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import * as WebSocket from 'ws';
-import { RootRouter } from './router';
 const app = express();
+
+import { RootRouter } from './router';
+import { WebSocketManager } from './websocket/websocket-manager';
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
@@ -31,21 +33,18 @@ const wss = new WebSocket.Server({server: server});
 // Websocketのサーバー側の実装
 // ===============================================
 
-let connections: WebSocket[] = [];
 wss.on('connection', (ws: WebSocket) => {
   console.log("[SERVER] connection: ");
-  connections.push(ws);
+  WebSocketManager.instance.add(Date.now().toString(), ws);
+  WebSocketManager.instance.debug();
   ws.on('message', (message) => {
     console.log(`[SERVER] received: ${message}`);
     // クライアントからのアクションを基に、操作を行う
-    connections.forEach((c) => {
-      c.send("Parrot: " + message);
-    });
+    WebSocketManager.instance.getAll().forEach(c => c.send(`Parrot: ${message}`));
   }).on('close', (code: string, reason: string) => {
     console.log(`[SERVER] close = ${code}, reason = ${reason}`);
-    connections = connections.filter((c, i) => {
-      return (c === ws) ? false : true;
-    });
+    WebSocketManager.instance.deleteByWS(ws);
+    WebSocketManager.instance.debug();
   });
 }).on('error', (err) => {
   console.log(`[SERVER] error ${err}`);
