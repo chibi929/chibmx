@@ -10,6 +10,11 @@ export class RequestHandler implements IReqeustHandler {
   }
 
   execute(req, res) {
+    console.log(`req.method: ${req.method}`);
+    console.log(`req.params: ${JSON.stringify(req.params)}`);
+    console.log(`req.query : ${JSON.stringify(req.query)}`);
+    console.log(`req.body  : ${JSON.stringify(req.body)}`);
+
     const method = req.method.toLowerCase();
     this[method](req).then(_res => {
       res.json(_res);

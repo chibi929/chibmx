@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { Index as Shenrons } from '../request/shenrons';
+import { Shenrons } from '../request/shenrons/shenrons';
 
 export class ShenronsRouter {
   private static readonly shenrons = new Shenrons();
