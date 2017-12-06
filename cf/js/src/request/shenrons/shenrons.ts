@@ -25,13 +25,13 @@ export class Shenrons extends RequestHandler {
    *   action: string
    *   imageUrl?: string
    */
-  post(req): Promise<IPostResponse> {
+  post(req): Promise<any> {
     const postReq = new PostRequest(req);
     const resData: IPostResponse = {
       action: postReq.action,
       imageUrl: postReq.target ? `./res/${imageMap[postReq.target]}` : undefined
     };
     WebSocketManager.instance.getAll().forEach(ws => ws.send(JSON.stringify(resData)));
-    return Promise.resolve(new PostResponse(resData));
+    return Promise.resolve({speech: " ", displayText: " "});
   }
 }

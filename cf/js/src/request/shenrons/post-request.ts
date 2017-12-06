@@ -8,7 +8,7 @@ export class PostRequest {
   target?: "shenron" | "kinoko";
 
   constructor(req: any) {
-    this.action = req.body.action;
-    this.target = req.body.target;
+    this.action = "show";
+    this.target = req.body.result.parameters.Target;
   }
 }
