@@ -1,6 +1,6 @@
 import * as express from 'express';
-import {Index as Cats} from '../request/cats';
-import {Index as CatsAbout} from '../request/cats/about';
+import {Index as Cats} from '../api/cats';
+import {Index as CatsAbout} from '../api/cats/about';
 
 export class CatsRouter {
   private static readonly cats = new Cats();

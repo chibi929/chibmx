@@ -1,6 +1,6 @@
 import * as express from 'express';
-import {Index as Birds} from '../request/birds';
-import {Index as BirdsAbout} from '../request/birds/about';
+import {Index as Birds} from '../api/birds';
+import {Index as BirdsAbout} from '../api/birds/about';
 
 export class BardsRouter {
   private static readonly birds = new Birds();
