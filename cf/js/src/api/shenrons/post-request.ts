@@ -1,14 +1,16 @@
+import { IDFRequest } from '../../interface/dialog-flow';
+
 export interface IPostRequest {
   action: "show" | "hide";
   target?: "shenron" | "kinoko";
 }
 
-export class PostRequest {
+export class PostRequest implements IPostRequest {
   action: "show" | "hide";
   target?: "shenron" | "kinoko";
 
   constructor(req: any) {
     this.action = "show";
-    this.target = req.body.result.parameters.Target;
+    this.target = (<IDFRequest>req.body).result.parameters.Target;
   }
 }

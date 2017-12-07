@@ -3,7 +3,7 @@ export interface IPostResponse {
   imageUrl?: string;
 }
 
-export class PostResponse {
+export class PostResponse implements IPostResponse {
   action: "show" | "hide";
   imageUrl?: string;
 

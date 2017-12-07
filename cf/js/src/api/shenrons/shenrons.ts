@@ -1,6 +1,7 @@
 import { RequestHandler } from '../request-handler';
 import { PostRequest } from './post-request';
-import { IPostResponse, PostResponse } from './post-response';
+import { IPostResponse } from './post-response';
+import { IDFRequest, IDFResponse } from '../../interface/dialog-flow';
 
 import { WebSocketManager } from '../../websocket/websocket-manager';
 
@@ -16,16 +17,7 @@ export class Shenrons extends RequestHandler {
     });
   }
 
-  /**
-   * [Request]
-   *   action: string
-   *   target?: string
-   *
-   * [Response]
-   *   action: string
-   *   imageUrl?: string
-   */
-  post(req): Promise<any> {
+  post(req: any): Promise<IDFResponse> {
     const postReq = new PostRequest(req);
     const resData: IPostResponse = {
       action: postReq.action,
