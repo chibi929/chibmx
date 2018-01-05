@@ -1,6 +1,6 @@
 applications:
 - path: .
-  name: chibi
+  name: chibi-bmx
   domain: mybluemix.net
   random-route: false
   instances: 1
