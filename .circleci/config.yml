@@ -1,7 +1,6 @@
 version: 2
 jobs:
   build:
-    working_directory: cf/js
     docker:
       - image: circleci/node:8.9.1
     steps:
@@ -12,6 +11,8 @@ jobs:
             curl -fsSL https://clis.ng.bluemix.net/install/linux | sh
             bx api https://api.ng.bluemix.net
             bx login -u $BMX_USER -p $BMX_PASS -o $BMX_ORG -s dev > /dev/null 2>&1
+            cd cf/js
+            yarn
       - run:
           name: System Information
           command: |
@@ -22,10 +23,14 @@ jobs:
             echo "bmx: $(bx -v)"
       - run:
           name: Build
-          command: npm run build
+          command: |
+            cd cf/js
+            npm run build
       - run:
           name: Deploy
-          command: npm run deploy > /dev/null 2>&1
+          command: |
+            cd cf/js
+            npm run deploy > /dev/null 2>&1
 workflows:
    version: 2
    mastary:
