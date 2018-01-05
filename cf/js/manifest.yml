@@ -2,6 +2,6 @@ applications:
 - path: .
   name: chibi
   domain: mybluemix.net
-  random-route: true
+  random-route: false
   instances: 1
   memory: 64MB
