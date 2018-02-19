@@ -1,0 +1,21 @@
+{
+  "name": "bmx",
+  "private": true,
+  "version": "0.0.1",
+  "repository": "git@github.com:chibi929/bmx.git",
+  "author": "chibi929 <ibihc929@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "watson-developer-cloud": "^2.39.0"
+  },
+  "devDependencies": {
+    "@types/node": "^8.0.30",
+    "@types/watson-developer-cloud": "^2.31.0",
+    "typescript": "^2.5.2"
+  },
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "tsc",
+    "force-build": "npm run clean && npm run build"
+  }
+}
