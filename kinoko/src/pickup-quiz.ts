@@ -1,4 +1,4 @@
-import './extension/array.extenstion';
+import './extension/array.extension';
 
 // 本当はちゃんと実装する
 type Quiz = string;
