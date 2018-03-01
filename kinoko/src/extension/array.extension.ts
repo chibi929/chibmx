@@ -12,7 +12,7 @@ Array.prototype.shuffle = function() {
   }
 
   // Fisher-Yates アルゴリズムによるシャッフル
-  for (var i = this.length -1; i > 0; i--) {
+  for (var i = this.length - 1; i > 0; i--) {
     var r = Math.floor(Math.random() * (i + 1));
     var tmp = this[i];
     this[i] = this[r];
