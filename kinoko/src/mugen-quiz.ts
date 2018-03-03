@@ -1,11 +1,10 @@
-// 本当はちゃんと実装する
-type Quiz = string;
+import { IQuizAdapter, Quiz } from './quiz-adapter';
 
 /**
  * 無限ループ用クイズクラス
  * 現行のシステムの一部をクラスに分離したもの
  */
-export class MugenQuiz {
+export class MugenQuiz implements IQuizAdapter {
   /**
    * コンストラクタ
    *

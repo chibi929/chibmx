@@ -1,12 +1,10 @@
 import './extension/array.extension';
-
-// 本当はちゃんと実装する
-type Quiz = string;
+import { IQuizAdapter, Quiz } from './quiz-adapter';
 
 /**
  * ピックアップ用クイズクラス
  */
-export class PickupQuiz {
+export class PickupQuiz implements IQuizAdapter {
   private readonly pickupQuizzes: Quiz[];
   private currentIndex: number = 0;
 
