@@ -25,6 +25,11 @@ export interface IQuizConfig {
 export class QuizManager {
   private readonly quizAdapter: IQuizAdapter;
 
+  /**
+   * コンストラクタ
+   *
+   * @param config クイズ設定オブジェクト
+   */
   constructor(config: IQuizConfig) {
     const typeString = QuizType[config.type];
     const options = config.options[typeString];
@@ -38,18 +43,36 @@ export class QuizManager {
     }
   }
 
+  /**
+   * 次のクイズがあるかどうか
+   *
+   * @returns true: ある, false: ない
+   */
   hasNext(): boolean {
     return this.quizAdapter.hasNext();
   }
 
+  /**
+   * 現在のクイズオブジェクトを返す
+   *
+   * @returns クイズオブジェクト
+   */
   getCurrentQuiz(): Quiz {
     return this.quizAdapter.getCurrentQuiz();
   }
 
+  /**
+   * 次のクイズに進める
+   *
+   * @returns 次のクイズオブジェクト
+   */
   nextQuiz(): Quiz {
     return this.quizAdapter.nextQuiz();
   }
 
+  /**
+   * 本当はちゃんと実装する
+   */
   private readJson(filePath: string): any {
     return ["aaaaa", "bbbbb", "ccccc", "ddddd", "eeeee"];
   }
