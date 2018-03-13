@@ -1,8 +1,9 @@
 import * as Rx from 'rxjs';
-function next(next: any): void { console.log(`next: ${JSON.stringify(next)}`); }
-function error(err: any): void { console.log(`error: ${err}`); }
+function next(next: any): void { console.log(next); }
+function error(err: any): void { console.log(error); }
 function complete(): void { console.log(`complete: `); }
 
+import { map } from 'rxjs/operators';
 class ObservableInstance {
   /**
    * 当該 Observable から発行される値は指定した時間まで無視
@@ -346,6 +347,510 @@ class ObservableInstance {
       console.log(res);
     });
   }
+
+  /**
+   * Observable の発行する値をグループ化する
+   */
+  groupBy(): void {
+    const o1 = Rx.Observable.of(
+      { id: 1, name: "A1" },
+      { id: 2, name: "A2" },
+      { id: 3, name: "A3" },
+      { id: 1, name: "B1" },
+      { id: 2, name: "B2" },
+      { id: 3, name: "B3" },
+      { id: 1, name: "C1" },
+      { id: 1, name: "D1" },
+      { id: 2, name: "C2" },
+      { id: 2, name: "D2" }
+    );
+    o1.groupBy(v => v.id)
+      .flatMap(v => v.reduce((acc, c) => [...acc, c], []))
+      .subscribe(next, error, complete);
+  }
+
+  /**
+   * Observable の発行する値を全て無視する
+   */
+  ignoreElements(): void {
+    const o1 = Rx.Observable.of(1, 2, 3, 4, 5);
+    o1.ignoreElements().subscribe(next, error, complete);
+  }
+
+  /**
+   * Observable の発行する値が Empty かどうかを発行する
+   */
+  isEmpty(): void {
+    const o1 = Rx.Observable.empty();
+    o1.isEmpty().subscribe(next, error, complete);
+
+    const o2 = Rx.Observable.of(1, 2, 3, 4, 5).ignoreElements();
+    o2.isEmpty().subscribe(next, error, complete);
+
+  }
+
+  /**
+   * Observable の最後の値を発行する
+   */
+  last(): void {
+    const o1 = Rx.Observable.of(2, 4, 6, 8, 10, 12, 14, 16, 18, 20);
+    o1.last().subscribe(next, error, complete);
+
+    const o2 = Rx.Observable.of(2, 4, 6, 8, 10, 12, 14, 16, 18, 20);
+    o2.last(v => v % 6 === 0).subscribe(next, error, complete);
+  }
+
+  /**
+   * 使いみちわからず。
+   * コードを見てみると `obs` 自分自身が帰ってくる模様？
+   */
+  let(): void {
+    const o1 = Rx.Observable.of("a", "b", "c", "d", "e");
+    o1.map(v => v + v)
+      .let((obs) => obs.map(v => v.toUpperCase()))
+      .subscribe(next, error, complete);
+  }
+
+  /**
+   * カスタムオペレータを差し込めるらしいが。。。
+   */
+  lift(): void {
+  }
+
+  /**
+   * Observable の値を変換して発行する
+   */
+  map(): void {
+    const o1 = Rx.Observable.of(1, 2, 3, 4, 5);
+    o1.map(v => v * 10).subscribe(next, error, complete);
+  }
+
+  /**
+   * Observable の値を特定の値に変換して発行する
+   */
+  mapTo(): void {
+    const o1 = Rx.Observable.of(1, 2, 3, 4, 5);
+    o1.mapTo("a").subscribe(next, error, complete);
+  }
+
+  /**
+   * 発行される値を Notificaiton オブジェクトに変換する
+   */
+  materialize(): void {
+    const o1 = Rx.Observable.of<any>("a", "b", 13, "d").map(v => v.toUpperCase());
+    o1.materialize().subscribe(next, error, complete);
+  }
+
+  /**
+   * Observable の中で最大の値を発行する
+   */
+  max(): void {
+    const o1 = Rx.Observable.of(5, 4, 7, 8, 2);
+    o1.max().subscribe(next, error, complete);
+  }
+
+  /**
+   * 複数の Observable を合成して発行する
+   */
+  merge(): void {
+    const o1 = Rx.Observable.interval(1000).map(v => `First: ${v}`).take(10);
+    const o2 = Rx.Observable.interval(750).map(v => `Second: ${v}`).take(10);
+    o1.merge(o2).subscribe(next, error, complete);
+  }
+
+  /**
+   * 外側の Observable が発行されたら、内側の Observable を合成して発行する
+   */
+  mergeAll(): void {
+    const o1 = Rx.Observable.of("a", "b", "c", "d", "e");
+    o1.map(v => Rx.Observable.interval(1000).take(10).map(i => `${v}: ${i}`))
+      .mergeAll()
+      .subscribe(next, error, complete);
+  }
+
+  /**
+   * ↑でやったことが、簡単にできた
+   */
+  mergeMap(): void {
+    const o1 = Rx.Observable.of("a", "b", "c", "d", "e");
+    o1.mergeMap(v => Rx.Observable.interval(1000).take(10).map(i => v + i))
+      .subscribe(next, error, complete);
+  }
+
+  /**
+   * merge + mapTo
+   */
+  mergeMapTo(): void {
+    const o1 = Rx.Observable.of("a", "b", "c", "d", "e");
+    o1.mergeMapTo(Rx.Observable.interval(1000).take(10))
+      .subscribe(next, error, complete);
+  }
+
+  /**
+   * Observable が発行する値をアキュムレーターで蓄積する
+   */
+  mergeScan(): void {
+    const o1 = Rx.Observable.interval(1000).mapTo(2);
+    o1.mergeScan((acc, v) => Rx.Observable.of(acc * v), 1)
+      .subscribe(next, error, complete);
+  }
+
+  /**
+   * Observable の中で最大の値を発行する
+   */
+  min(): void {
+    const o1 = Rx.Observable.of(5, 4, 7, 8, 2);
+    o1.min().subscribe(next, error, complete);
+  }
+
+  /**
+   * 複数の購読を行う
+   */
+  multicast(): void {
+    const o1 = Rx.Observable.interval(1000).take(10).do(() => console.log("AAAAA"));
+    const multicast = o1.multicast(() => new Rx.Subject());
+    multicast.subscribe(v => console.log(`Multi(1): ${v}`))
+    multicast.subscribe(v => console.log(`Multi(2): ${v}`))
+    multicast.connect();
+  }
+
+  /**
+   * 発行は「次のタイミング」で行う
+   */
+  observeOn(): void {
+    const o1: Rx.Observable<any> = Rx.Observable.create(observer => {
+      console.log("[1] before next()");
+      observer.next(1);
+      console.log("[1] after next()");
+
+      console.log("[2] before next()");
+      observer.next(2);
+      console.log("[2] after next()");
+
+      console.log("[3] before complete()");
+      observer.complete();
+      console.log("[3] after complete()");
+    });
+
+    console.log("[4] before subscribe");
+    o1.observeOn(Rx.Scheduler.async).subscribe(
+      next => console.log(`[e] next: ${next}`),
+      err => console.log(`[e] error: ${err}`),
+      () => console.log(`[e] complete: `)
+    );
+    console.log("[4] after subscribe");
+  }
+
+  /**
+   * catch みたいなもん。
+   * エラーハンドリングするなら catch 使え。
+   */
+  onErrorResumeNext(): void {
+    const o1 = Rx.Observable.of(1, 2, 3, 4, 5)
+      .map(n => {
+        if (n == 4) {
+          throw "four!";
+        }
+        return n;
+      });
+
+    o1.onErrorResumeNext(Rx.Observable.of("I", "II", "III", "IV", "V"))
+      .subscribe(next, error, complete);
+  }
+
+  /**
+   * 2つの発行がペアになる
+   */
+  pairwise(): void {
+    const o1 = Rx.Observable.of("a", "b", "c", "d", "e");
+    o1.pairwise().subscribe(next, error, complete);
+  }
+
+  /**
+   * Observable を分離する
+   */
+  partition(): void {
+    const o1 = Rx.Observable.of(1, 2, 3, 4, 5, 6, 7, 8, 9);
+    const p = o1.partition(v => v % 2 === 1);
+    Rx.Observable.concat(...p).subscribe(next, error, complete);
+  }
+
+  /**
+   * メソッドチェーンではなくパイプでやる
+   */
+  pipe(): void {
+    const o1 = Rx.Observable.of("a", "b", "c", "d", "e");
+    o1.pipe(map(v => v.toUpperCase()))
+      .subscribe(next, error, complete);
+  }
+
+  /**
+   * 特定のキーのみを発行する
+   */
+  pluck(): void {
+    const o1 = Rx.Observable.of(
+      { name: "AAAAA", age: 10 },
+      { name: "BBBBB", age: 20 },
+      { name: "CCCCC", age: 30 }
+    );
+
+    o1.pluck("name")
+      .subscribe(next, error, complete);
+  }
+
+  /**
+   * `multicast` との違いがわからない
+   */
+  publish(): void {
+    const o1 = Rx.Observable.of("a", "b", "c", "d", "e");
+    const pub = o1.publish();
+    pub.subscribe(next, error, complete);
+    pub.subscribe(next, error, complete);
+    pub.connect();
+  }
+
+  /**
+   * 発行の先頭に値を追加する `publish` ？
+   */
+  publishBefavior(): void {
+    const o1 = Rx.Observable.of("a", "b", "c", "d", "e");
+    const pub = o1.publishBehavior("test");
+    pub.subscribe(next, error, complete);
+    pub.subscribe(next, error, complete);
+    pub.connect();
+  }
+
+  /**
+   * 最後のみを発行する `publish`
+   */
+  publishLast(): void {
+    const o1 = Rx.Observable.of("a", "b", "c", "d", "e");
+    const pub = o1.publishLast();
+    pub.subscribe(next, error, complete);
+    pub.subscribe(next, error, complete);
+    pub.connect();
+  }
+
+  /**
+   * もはやわからん
+   */
+  publishReplay(): void {
+    const o1 = Rx.Observable.of("a", "b", "c", "d", "e");
+    const pub = o1.publishReplay()
+    pub.subscribe(next, error, complete);
+    pub.subscribe(next, error, complete);
+    pub.connect();
+  }
+
+  /**
+   * 一番速い奴が発行される
+   */
+  race(): void {
+    const o1 = Rx.Observable.interval(1500).map(v => `1500ms: ${v}`);
+    const o2 = Rx.Observable.interval(1000).map(v => `1000ms: ${v}`);
+    const o3 = Rx.Observable.interval(500).map(v => `500ms: ${v}`);
+    o1.race(o2, o3)
+      .subscribe(next, error, complete);
+  }
+
+  /**
+   * Array.reduce と同じ
+   */
+  reduce(): void {
+    const o1 = Rx.Observable.of(1, 2, 3, 4, 5, 6, 7, 8, 9);
+    o1.reduce((acc, c) => acc + c, 0)
+      .subscribe(next, error, complete);
+  }
+
+  /**
+   * Observable を繰り返す
+   */
+  repeat(): void {
+    const o1 = Rx.Observable.of(1, 2, 3, 4, 5, 6, 7, 8, 9);
+    o1.repeat(3)
+      .subscribe(next, error, complete);
+  }
+
+  /**
+   * attempts の使い方がわからないが、リトライ条件を指定できる
+   */
+  repeatWhen(): void {
+    Rx.Observable.of(1, 2, 3)
+      .repeatWhen(attempts => attempts.delay(1000))
+      .subscribe(next, error, complete);
+  }
+
+  /**
+   *エラーが発生したときにリトライする
+   */
+  retry(): void {
+    Rx.Observable.of(1, 2, 3, 4, 5)
+      .map(n => {
+        if (n == 4) {
+          throw "four!";
+        }
+        return n;
+      })
+      .retry(2)
+      .subscribe(next, error, complete);
+  }
+
+  /**
+   *エラーが発生したときにリトライする
+   */
+  retryWhen(): void {
+    Rx.Observable.of(1, 2, 3, 4, 5)
+      .map(n => {
+        if (n == 4) {
+          throw "four!";
+        }
+        return n;
+      })
+      .retryWhen(errors => errors.delay(1000))
+      .subscribe(next, error, complete);
+  }
+
+  /**
+   * 特定タイミングの最新の値を発行する。
+   * `特定のタイミング` は `sample()` 渡す Observable に委ねられる
+   * 最新の値に変化がない場合は何も起きない
+   */
+  sample(): void {
+    const clickMock = Rx.Observable.interval(5000).map(v => `CLICK_MOCK: ${v}`);
+    Rx.Observable.interval(1000)
+      .sample(clickMock)
+      .subscribe(next, error, complete);
+  }
+
+  /**
+   * 特定タイミングの最新の値を発行する。
+   * `特定のタイミング` は `sample()` 渡す Observable に委ねられる
+   * 最新の値に変化がない場合は何も起きない
+   */
+  sampleTime(): void {
+    const clickMock = Rx.Observable.interval(100).map(v => `CLICK_MOCK: ${v}`);
+    clickMock.sampleTime(1000)
+      .subscribe(next, error, complete);
+  }
+
+  /**
+   * `reduce` と似てるが、毎回発行を行う
+   */
+  scan(): void {
+    const o1 = Rx.Observable.of(1, 2, 3, 4, 5, 6, 7, 8, 9);
+    o1.scan((acc, c) => acc + c, 0)
+      .subscribe(next, error, complete);
+  }
+
+  /**
+   * 同じ発行のある Observable かどうかを判定する
+   */
+  sequenceEqual(): void {
+    const compareObservable = Rx.Observable.interval(1000).take(10);
+    Rx.Observable.of(0,1,2,3,4,5,6,7,8,9)
+      .sequenceEqual(compareObservable)
+      .subscribe(next, error, complete);
+  }
+
+  /**
+   * multicast publish との違いがわからない
+   */
+  share(): void {
+    const o1 = Rx.Observable.interval(1000).map(v => `SOURCE: ${v}`).do(_ => console.log("DO"));
+    o1.subscribe(next);
+    o1.subscribe(next);
+    const share = o1.share();
+    share.subscribe(next);
+    share.subscribe(next);
+  }
+
+  /**
+   * もはやわからん
+   */
+  shareReplay(): void {
+  }
+
+  /**
+   * `predicate` で指定する値が１つしかない場合は成功。
+   */
+  single(): void {
+    Rx.Observable.of("a", "b", "c", "b", "c")
+      .single((v) => v === "a")
+      .subscribe(next, error, complete);
+  }
+
+  /**
+   * `count` 分スキップする
+   */
+  skip(): void {
+    Rx.Observable.of("a", "b", "c", "d", "e")
+      .skip(3)
+      .subscribe(next, error, complete);
+  }
+
+  /**
+   * `count` 分、後ろからスキップする
+   */
+  skipLast(): void {
+    Rx.Observable.of("a", "b", "c", "d", "e")
+      .skipLast(1)
+      .subscribe(next, error, complete);
+  }
+
+  /**
+   * `notifier` による通知があるまでスキップする
+   */
+  skipUntil(): void {
+    Rx.Observable.interval(1000).map(v => `SOURCE: ${v}`)
+      .skipUntil(Rx.Observable.interval(3000))
+      .subscribe(next, error, complete);
+  }
+
+  /**
+   * `predicate` で指定する条件の間スキップする
+   * 一度条件から外れるとずっと放出し続けるっぽい
+   */
+  skipWhile(): void {
+    Rx.Observable.interval(1000)
+      .skipWhile((v) => v < 5)
+      .subscribe(next, error, complete);
+  }
+
+  /**
+   * Observable の先頭に値を追加する
+   */
+  startWith(): void {
+    Rx.Observable.of(1, 2, 3)
+      .startWith(<any>"a")
+      .subscribe(next, error, complete);
+  }
+
+  /**
+   * 発行は同期的に行う
+   */
+  subscribeOn(): void {
+    const o1: Rx.Observable<any> = Rx.Observable.create(observer => {
+      console.log("[1] before next()");
+      observer.next(1);
+      console.log("[1] after next()");
+
+      console.log("[2] before next()");
+      observer.next(2);
+      console.log("[2] after next()");
+
+      console.log("[3] before complete()");
+      observer.complete();
+      console.log("[3] after complete()");
+    });
+
+    console.log("[4] before subscribe");
+    o1.subscribeOn(Rx.Scheduler.async).subscribe(
+      next => console.log(`[5] next: ${next}`),
+      err => console.log(`[5] error: ${err}`),
+      () => console.log(`[5] complete: `)
+    );
+    console.log("[4] after subscribe");
+  }
 }
 
 const test = new ObservableInstance();
@@ -382,4 +887,49 @@ const test = new ObservableInstance();
 //test.find();
 //test.findIndex();
 //test.first();
-test.forEach();
+//test.forEach();
+//test.groupBy();
+//test.ignoreElements();
+//test.isEmpty();
+//test.last();
+//test.let();
+//test.lift();
+//test.map();
+//test.mapTo();
+//test.materialize();
+//test.max();
+//test.merge();
+//test.mergeAll();
+//test.mergeMap();
+//test.mergeMapTo();
+//test.mergeScan();
+//test.min();
+//test.multicast();
+//test.observeOn();
+//test.onErrorResumeNext();
+//test.pairwise();
+//test.partition();
+//test.pipe();
+//test.pluck();
+//test.publish();
+//test.publishBehabior();
+//test.publishLast();
+//test.publishReplay();
+//test.race();
+//test.reduce();
+//test.repeat();
+//test.repeatWhen();
+//test.retry();
+//test.retryWhen();
+//test.sample();
+//test.sampleTime();
+//test.scan();
+//test.sequenceEqual();
+//test.share();
+//test.single();
+//test.skip();
+//test.skipLast();
+//test.skipUntil();
+//test.skipWhile();
+//test.startWith();
+test.subscribeOn();
