@@ -2,6 +2,16 @@ import './extension/array.extension';
 import { IQuizAdapter, Quiz } from './quiz-adapter';
 
 /**
+ * PickupQuiz のオプション
+ */
+export interface IOptions {
+  /**
+   * 出題数
+   */
+  count: number
+}
+
+/**
  * ピックアップ用クイズクラス
  */
 export class PickupQuiz implements IQuizAdapter {
@@ -13,17 +23,17 @@ export class PickupQuiz implements IQuizAdapter {
    * - シャッフルを行ってピックアップ分だけ抽出する
    *
    * @param quizzes クイズオブジェクト配列
-   * @param count ピックアップ数
+   * @param options オプション
    */
   constructor(
     private readonly quizzes: Quiz[],
-    private readonly count: number
+    options: IOptions
   ) {
     this.pickupQuizzes = [].concat(quizzes);
     this.pickupQuizzes.shuffle();
 
-    if (this.pickupQuizzes.length > count) {
-      this.pickupQuizzes.length = count;
+    if (this.pickupQuizzes.length > options.count) {
+      this.pickupQuizzes.length = options.count;
     }
   }
 

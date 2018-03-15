@@ -1,6 +1,6 @@
 import { QuizType } from './quiz-type';
-import { MugenQuiz } from './mugen-quiz';
-import { PickupQuiz } from './pickup-quiz';
+import { MugenQuiz, IOptions as IMugenOptions } from './mugen-quiz';
+import { PickupQuiz, IOptions as IPickupOptions } from './pickup-quiz';
 import { IQuizAdapter, Quiz } from './quiz-adapter';
 
 /**
@@ -9,14 +9,7 @@ import { IQuizAdapter, Quiz } from './quiz-adapter';
 export interface IQuizConfig {
   type: QuizType,
   quizFilePath: string,
-  options: {
-    Mugen?: {
-      startIndex: number
-    },
-    Pickup?: {
-      numberOfQuestions: number
-    }
-  }
+  options: IMugenOptions | IPickupOptions
 }
 
 /**
@@ -29,18 +22,30 @@ export class QuizManager {
    * コンストラクタ
    *
    * @param config クイズ設定オブジェクト
+   * @param onLoaded クイズ読み込み完了コールバック
    */
-  constructor(config: IQuizConfig) {
-    const typeString = QuizType[config.type];
-    const options = config.options[typeString];
-    const quizzes = this.readJson(config.quizFilePath);
-
-    switch (config.type) {
-    case QuizType.Mugen: this.quizAdapter = new MugenQuiz(quizzes, options.startIndex); break;
-    case QuizType.Pickup: this.quizAdapter = new PickupQuiz(quizzes, options.numberOfQuestions); break;
-    default:
-      throw new Error(`Unsupported QuizType: ${QuizType[config.type]}`);
+  constructor(config: IQuizConfig, onLoaded: (err, data?) => void) {
+    if (config.type != QuizType.Mugen && config.type != QuizType.Pickup) {
+      throw new Error(`Unsupported QuizType: ${config.type}`);
     }
+
+    const options = config.options;
+    this.readJson(config.quizFilePath).then(quizzes => {
+      // `this.quizAdapter` は `readonly` でありたいので、いわゆる const 外しをしている
+      switch (config.type) {
+      case QuizType.Mugen:
+        (<any>this).quizAdapter = new MugenQuiz(quizzes, <IMugenOptions>options);
+        break;
+      case QuizType.Pickup:
+        (<any>this).quizAdapter = new PickupQuiz(quizzes, <IPickupOptions>options);
+        break;
+      default:
+        // パラメータチェックにより弾いているので、ここには来ない
+      }
+      onLoaded(null, quizzes);
+    }).catch(() => {
+      onLoaded(new Error("Read error"));
+    });
   }
 
   /**
@@ -73,7 +78,9 @@ export class QuizManager {
   /**
    * 本当はちゃんと実装する
    */
-  private readJson(filePath: string): any {
-    return ["aaaaa", "bbbbb", "ccccc", "ddddd", "eeeee"];
+  private readJson(filePath: string): Promise<string[]> {
+    return new Promise((resolve, reject) => {
+      resolve(["aaaaa", "bbbbb", "ccccc", "ddddd", "eeeee"]);
+    });
   }
 }
