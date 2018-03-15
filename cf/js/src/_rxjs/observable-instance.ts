@@ -1,8 +1,5 @@
 import * as Rx from 'rxjs';
-function next(next: any): void { console.log(next); }
-function error(err: any): void { console.log(error); }
-function complete(): void { console.log(`complete`); }
-const args = [next, error, complete];
+import { callbacks } from './subscribe-callback-impl';
 
 import { map } from 'rxjs/operators';
 class ObservableInstance {
@@ -13,7 +10,7 @@ class ObservableInstance {
   audit(): void {
     const o1 = Rx.Observable.interval(100).audit((ev) => {
       return Rx.Observable.interval(10000);
-    }).subscribe(...args);
+    }).subscribe(...callbacks);
   }
 
   /**
@@ -22,7 +19,7 @@ class ObservableInstance {
    */
   auditTime(): void {
     let time = 0;
-    const o1 = Rx.Observable.interval(100).auditTime(10000).subscribe(...args);
+    const o1 = Rx.Observable.interval(100).auditTime(10000).subscribe(...callbacks);
   }
 
   /**
@@ -31,7 +28,7 @@ class ObservableInstance {
   buffer(): void {
     const o1 = Rx.Observable.interval(1000).take(5);
     const o2 = Rx.Observable.interval(100);
-    o2.buffer(o1).subscribe(...args);
+    o2.buffer(o1).subscribe(...callbacks);
   }
 
   /**
@@ -43,7 +40,7 @@ class ObservableInstance {
       o1.bufferCount(2),
       o1.bufferCount(3, 2),
       o1.bufferCount(2, 3)
-    ).subscribe(...args);
+    ).subscribe(...callbacks);
   }
 
   /**
@@ -51,7 +48,7 @@ class ObservableInstance {
    */
   bufferTime(): void {
     const o1 = Rx.Observable.interval(100).take(10);
-    o1.bufferTime(500).subscribe(...args);
+    o1.bufferTime(500).subscribe(...callbacks);
   }
 
   /**
@@ -61,7 +58,7 @@ class ObservableInstance {
   bufferToggle(): void {
     const openings = Rx.Observable.interval(5000);
     const closing = Rx.Observable.interval(10000);
-    Rx.Observable.interval(1000).bufferToggle(openings, i => closing).subscribe(...args);
+    Rx.Observable.interval(1000).bufferToggle(openings, i => closing).subscribe(...callbacks);
   }
 
   /**
@@ -70,7 +67,7 @@ class ObservableInstance {
   bufferWhen(): void {
     Rx.Observable.interval(100).take(15).bufferWhen(() => {
       return Rx.Observable.interval(1000);
-    }).subscribe(...args);
+    }).subscribe(...callbacks);
   }
 
   /**
@@ -84,7 +81,7 @@ class ObservableInstance {
         }
         return n;
       }).catch(err => Rx.Observable.of("I", "II", "III", "IV", "V"))
-        .subscribe(...args);
+        .subscribe(...callbacks);
   }
 
   /**
@@ -94,7 +91,7 @@ class ObservableInstance {
   combineAll(): void {
     const o1 = Rx.Observable.interval(1000).take(10)
     const o2 = Rx.Observable.interval(2000).take(3);
-    o1.map(v => o2.map(vv => `Result(${v}): ${vv}`)).combineAll().subscribe(...args);
+    o1.map(v => o2.map(vv => `Result(${v}): ${vv}`)).combineAll().subscribe(...callbacks);
   }
 
   /**
@@ -103,7 +100,7 @@ class ObservableInstance {
   combineLatest(): void {
     const o1 = Rx.Observable.interval(1000).map(i => `First: ${i}`).take(10);
     const o2 = Rx.Observable.interval(2000).map(i => `Second: ${i}`).take(3);
-    o1.combineLatest(o2).subscribe(...args)
+    o1.combineLatest(o2).subscribe(...callbacks)
   }
 
   /**
@@ -112,7 +109,7 @@ class ObservableInstance {
   concat(): void {
     const o1 = Rx.Observable.interval(1000).map(i => `First: ${i}`).take(10);
     const o2 = Rx.Observable.interval(2000).map(i => `Second: ${i}`).take(3);
-    o1.concat(o2).subscribe(...args);
+    o1.concat(o2).subscribe(...callbacks);
   }
 
   /**
@@ -122,7 +119,7 @@ class ObservableInstance {
   concatAll(): void {
     const o1 = Rx.Observable.interval(1000).take(10);
     const o2 = Rx.Observable.interval(2000).take(3);
-    o1.map(v => o2.map(vv => `Result(${v}): ${vv}`)).concatAll().subscribe(...args);
+    o1.map(v => o2.map(vv => `Result(${v}): ${vv}`)).concatAll().subscribe(...callbacks);
   }
 
   /**
@@ -133,7 +130,7 @@ class ObservableInstance {
   concatMap(): void {
     const o1 = Rx.Observable.interval(1000).take(10);
     const o2 = Rx.Observable.interval(2000).take(3);
-    o1.concatMap((v => o2.map(vv => v*vv))).subscribe(...args);
+    o1.concatMap((v => o2.map(vv => v*vv))).subscribe(...callbacks);
   }
 
   /**
@@ -142,7 +139,7 @@ class ObservableInstance {
   concatMapTo(): void {
     const o1 = Rx.Observable.interval(1000).take(10);
     const o2 = Rx.Observable.interval(2000).take(3);
-    o1.concatMapTo(o2).subscribe(...args);
+    o1.concatMapTo(o2).subscribe(...callbacks);
   }
 
   /**
@@ -150,7 +147,7 @@ class ObservableInstance {
    */
   count(): void {
     const o1 = Rx.Observable.range(1,10);
-    o1.count().subscribe(...args);
+    o1.count().subscribe(...callbacks);
   }
 
   /**
@@ -159,7 +156,7 @@ class ObservableInstance {
   debounce(): void {
     const o1 = Rx.Observable.interval(1000).take(5);
     const o2 = Rx.Observable.interval(100);
-    o1.debounce(v => o2).subscribe(...args);
+    o1.debounce(v => o2).subscribe(...callbacks);
   }
 
   /**
@@ -167,7 +164,7 @@ class ObservableInstance {
    */
   debounceTime(): void {
     const o1 = Rx.Observable.interval(1000);
-    o1.debounceTime(100).subscribe(...args);
+    o1.debounceTime(100).subscribe(...callbacks);
   }
 
   /**
@@ -175,7 +172,7 @@ class ObservableInstance {
    */
   defaultIfEmpty(): void {
     const o1 = Rx.Observable.empty();
-    o1.defaultIfEmpty("test").subscribe(...args);
+    o1.defaultIfEmpty("test").subscribe(...callbacks);
   }
 
   /**
@@ -183,7 +180,7 @@ class ObservableInstance {
    */
   delay(): void {
     const o1 = Rx.Observable.of("A", "B", "C");
-    o1.delay(1000).subscribe(...args);
+    o1.delay(1000).subscribe(...callbacks);
   }
 
   /**
@@ -196,7 +193,7 @@ class ObservableInstance {
         return Rx.Observable.interval(5000);
       }
       return Rx.Observable.interval(1000);
-    }).subscribe(...args);
+    }).subscribe(...callbacks);
   }
 
   /**
@@ -208,7 +205,7 @@ class ObservableInstance {
     const notifE = new Rx.Notification('E', undefined, new TypeError('x.toUpperCase is not a function'));
     const materialized = Rx.Observable.of(notifA, notifB, notifE);
     const upperCase = materialized.dematerialize();
-    upperCase.subscribe(...args);
+    upperCase.subscribe(...callbacks);
   }
 
   /**
@@ -216,7 +213,7 @@ class ObservableInstance {
    */
   distinct(): void {
     const o1 = Rx.Observable.of(1, 1, 2, 2, 2, 1, 2, 3, 4, 3, 2, 1);
-    o1.distinct().subscribe(...args);
+    o1.distinct().subscribe(...callbacks);
   }
 
   /**
@@ -224,7 +221,7 @@ class ObservableInstance {
    */
   distinctUntilChanged(): void {
     const o1 = Rx.Observable.of(1, 1, 2, 2, 2, 1, 2, 3, 4, 3, 2, 1);
-    o1.distinctUntilChanged().subscribe(...args);
+    o1.distinctUntilChanged().subscribe(...callbacks);
   }
 
   /**
@@ -237,7 +234,7 @@ class ObservableInstance {
       { age: 30, name: "Foo" },
       { age: 10, name: "Hoge" },
     );
-    o1.distinctUntilKeyChanged("name").subscribe(...args);
+    o1.distinctUntilKeyChanged("name").subscribe(...callbacks);
 
     const o2 = Rx.Observable.of(
       { age: 10, name: "Hoge" },
@@ -245,7 +242,7 @@ class ObservableInstance {
       { age: 20, name: "Hoge" },
       { age: 10, name: "Foo" },
     );
-    o2.distinctUntilKeyChanged("age").subscribe(...args);
+    o2.distinctUntilKeyChanged("age").subscribe(...callbacks);
   }
 
   /**
@@ -257,7 +254,7 @@ class ObservableInstance {
       next => console.log(`do(next): ${next}`),
       error => console.log(`do(error): ${error}`),
       () => console.log(`do(complete):`)
-    ).subscribe(...args);
+    ).subscribe(...callbacks);
   }
 
   /**
@@ -265,7 +262,7 @@ class ObservableInstance {
    */
   elementAt(): void {
     const o1 = Rx.Observable.of("A", "B", "C");
-    o1.elementAt(2).subscribe(...args);
+    o1.elementAt(2).subscribe(...callbacks);
   }
 
   /**
@@ -273,13 +270,13 @@ class ObservableInstance {
    */
   every(): void {
     const o1 = Rx.Observable.of(1, 2, 3, 4, 5, 6);
-    o1.every(v => v < 5).subscribe(...args);
+    o1.every(v => v < 5).subscribe(...callbacks);
 
     const o2 = Rx.Observable.of(1, 2, 3, 4, 5);
-    o2.every(v => v < 5).subscribe(...args);
+    o2.every(v => v < 5).subscribe(...callbacks);
 
     const o3 = Rx.Observable.of(1, 2, 3, 4);
-    o3.every(v => v < 5).subscribe(...args);
+    o3.every(v => v < 5).subscribe(...callbacks);
   }
 
   /**
@@ -295,7 +292,7 @@ class ObservableInstance {
    */
   expand(): void {
     var clicks = Rx.Observable.interval(1000);
-    clicks.mapTo(1).expand(x => Rx.Observable.of(2 * x)).take(5).subscribe(...args);
+    clicks.mapTo(1).expand(x => Rx.Observable.of(2 * x)).take(5).subscribe(...callbacks);
   }
 
   /**
@@ -303,7 +300,7 @@ class ObservableInstance {
    */
   filter(): void {
     const o1 = Rx.Observable.of(1, 2, 3, 4, 5, 6);
-    o1.filter(v => v % 2 == 1).subscribe(...args);
+    o1.filter(v => v % 2 == 1).subscribe(...callbacks);
   }
 
   /**
@@ -311,7 +308,7 @@ class ObservableInstance {
    */
   finalize(): void {
     const o1 = Rx.Observable.of(1, 2, 3, 4, 5, 6);
-    o1.finally(() => console.log("Finaly")).subscribe(...args);
+    o1.finally(() => console.log("Finaly")).subscribe(...callbacks);
   }
 
   /**
@@ -319,7 +316,7 @@ class ObservableInstance {
    */
   find(): void {
     const o1 = Rx.Observable.of(2, 4, 6, 8, 10, 12, 14, 16, 18, 20);
-    o1.find(v => v % 5 === 0).subscribe(...args);
+    o1.find(v => v % 5 === 0).subscribe(...callbacks);
   }
 
   /**
@@ -327,7 +324,7 @@ class ObservableInstance {
    */
   findIndex(): void {
     const o1 = Rx.Observable.of(2, 4, 6, 8, 10, 12, 14, 16, 18, 20);
-    o1.findIndex(v => v % 5 === 0).subscribe(...args);
+    o1.findIndex(v => v % 5 === 0).subscribe(...callbacks);
   }
 
   /**
@@ -336,7 +333,7 @@ class ObservableInstance {
    */
   first(): void {
     const o1 = Rx.Observable.of(2, 4, 6, 8, 10, 12, 14, 16, 18, 20);
-    o1.first().subscribe(...args);
+    o1.first().subscribe(...callbacks);
   }
 
   /**
@@ -367,7 +364,7 @@ class ObservableInstance {
     );
     o1.groupBy(v => v.id)
       .flatMap(v => v.reduce((acc, c) => [...acc, c], []))
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -375,7 +372,7 @@ class ObservableInstance {
    */
   ignoreElements(): void {
     const o1 = Rx.Observable.of(1, 2, 3, 4, 5);
-    o1.ignoreElements().subscribe(...args);
+    o1.ignoreElements().subscribe(...callbacks);
   }
 
   /**
@@ -383,10 +380,10 @@ class ObservableInstance {
    */
   isEmpty(): void {
     const o1 = Rx.Observable.empty();
-    o1.isEmpty().subscribe(...args);
+    o1.isEmpty().subscribe(...callbacks);
 
     const o2 = Rx.Observable.of(1, 2, 3, 4, 5).ignoreElements();
-    o2.isEmpty().subscribe(...args);
+    o2.isEmpty().subscribe(...callbacks);
 
   }
 
@@ -395,10 +392,10 @@ class ObservableInstance {
    */
   last(): void {
     const o1 = Rx.Observable.of(2, 4, 6, 8, 10, 12, 14, 16, 18, 20);
-    o1.last().subscribe(...args);
+    o1.last().subscribe(...callbacks);
 
     const o2 = Rx.Observable.of(2, 4, 6, 8, 10, 12, 14, 16, 18, 20);
-    o2.last(v => v % 6 === 0).subscribe(...args);
+    o2.last(v => v % 6 === 0).subscribe(...callbacks);
   }
 
   /**
@@ -409,7 +406,7 @@ class ObservableInstance {
     const o1 = Rx.Observable.of("a", "b", "c", "d", "e");
     o1.map(v => v + v)
       .let((obs) => obs.map(v => v.toUpperCase()))
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -423,7 +420,7 @@ class ObservableInstance {
    */
   map(): void {
     const o1 = Rx.Observable.of(1, 2, 3, 4, 5);
-    o1.map(v => v * 10).subscribe(...args);
+    o1.map(v => v * 10).subscribe(...callbacks);
   }
 
   /**
@@ -431,7 +428,7 @@ class ObservableInstance {
    */
   mapTo(): void {
     const o1 = Rx.Observable.of(1, 2, 3, 4, 5);
-    o1.mapTo("a").subscribe(...args);
+    o1.mapTo("a").subscribe(...callbacks);
   }
 
   /**
@@ -439,7 +436,7 @@ class ObservableInstance {
    */
   materialize(): void {
     const o1 = Rx.Observable.of<any>("a", "b", 13, "d").map(v => v.toUpperCase());
-    o1.materialize().subscribe(...args);
+    o1.materialize().subscribe(...callbacks);
   }
 
   /**
@@ -447,7 +444,7 @@ class ObservableInstance {
    */
   max(): void {
     const o1 = Rx.Observable.of(5, 4, 7, 8, 2);
-    o1.max().subscribe(...args);
+    o1.max().subscribe(...callbacks);
   }
 
   /**
@@ -456,7 +453,7 @@ class ObservableInstance {
   merge(): void {
     const o1 = Rx.Observable.interval(1000).map(v => `First: ${v}`).take(10);
     const o2 = Rx.Observable.interval(750).map(v => `Second: ${v}`).take(10);
-    o1.merge(o2).subscribe(...args);
+    o1.merge(o2).subscribe(...callbacks);
   }
 
   /**
@@ -466,7 +463,7 @@ class ObservableInstance {
     const o1 = Rx.Observable.of("a", "b", "c", "d", "e");
     o1.map(v => Rx.Observable.interval(1000).take(10).map(i => `${v}: ${i}`))
       .mergeAll()
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -475,7 +472,7 @@ class ObservableInstance {
   mergeMap(): void {
     const o1 = Rx.Observable.of("a", "b", "c", "d", "e");
     o1.mergeMap(v => Rx.Observable.interval(1000).take(10).map(i => v + i))
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -484,7 +481,7 @@ class ObservableInstance {
   mergeMapTo(): void {
     const o1 = Rx.Observable.of("a", "b", "c", "d", "e");
     o1.mergeMapTo(Rx.Observable.interval(1000).take(10))
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -493,7 +490,7 @@ class ObservableInstance {
   mergeScan(): void {
     const o1 = Rx.Observable.interval(1000).mapTo(2);
     o1.mergeScan((acc, v) => Rx.Observable.of(acc * v), 1)
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -501,7 +498,7 @@ class ObservableInstance {
    */
   min(): void {
     const o1 = Rx.Observable.of(5, 4, 7, 8, 2);
-    o1.min().subscribe(...args);
+    o1.min().subscribe(...callbacks);
   }
 
   /**
@@ -556,7 +553,7 @@ class ObservableInstance {
       });
 
     o1.onErrorResumeNext(Rx.Observable.of("I", "II", "III", "IV", "V"))
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -564,7 +561,7 @@ class ObservableInstance {
    */
   pairwise(): void {
     const o1 = Rx.Observable.of("a", "b", "c", "d", "e");
-    o1.pairwise().subscribe(...args);
+    o1.pairwise().subscribe(...callbacks);
   }
 
   /**
@@ -573,7 +570,7 @@ class ObservableInstance {
   partition(): void {
     const o1 = Rx.Observable.of(1, 2, 3, 4, 5, 6, 7, 8, 9);
     const p = o1.partition(v => v % 2 === 1);
-    Rx.Observable.concat(...p).subscribe(...args);
+    Rx.Observable.concat(...p).subscribe(...callbacks);
   }
 
   /**
@@ -582,7 +579,7 @@ class ObservableInstance {
   pipe(): void {
     const o1 = Rx.Observable.of("a", "b", "c", "d", "e");
     o1.pipe(map(v => v.toUpperCase()))
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -596,7 +593,7 @@ class ObservableInstance {
     );
 
     o1.pluck("name")
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -605,8 +602,8 @@ class ObservableInstance {
   publish(): void {
     const o1 = Rx.Observable.of("a", "b", "c", "d", "e");
     const pub = o1.publish();
-    pub.subscribe(...args);
-    pub.subscribe(...args);
+    pub.subscribe(...callbacks);
+    pub.subscribe(...callbacks);
     pub.connect();
   }
 
@@ -616,8 +613,8 @@ class ObservableInstance {
   publishBefavior(): void {
     const o1 = Rx.Observable.of("a", "b", "c", "d", "e");
     const pub = o1.publishBehavior("test");
-    pub.subscribe(...args);
-    pub.subscribe(...args);
+    pub.subscribe(...callbacks);
+    pub.subscribe(...callbacks);
     pub.connect();
   }
 
@@ -627,8 +624,8 @@ class ObservableInstance {
   publishLast(): void {
     const o1 = Rx.Observable.of("a", "b", "c", "d", "e");
     const pub = o1.publishLast();
-    pub.subscribe(...args);
-    pub.subscribe(...args);
+    pub.subscribe(...callbacks);
+    pub.subscribe(...callbacks);
     pub.connect();
   }
 
@@ -638,8 +635,8 @@ class ObservableInstance {
   publishReplay(): void {
     const o1 = Rx.Observable.of("a", "b", "c", "d", "e");
     const pub = o1.publishReplay()
-    pub.subscribe(...args);
-    pub.subscribe(...args);
+    pub.subscribe(...callbacks);
+    pub.subscribe(...callbacks);
     pub.connect();
   }
 
@@ -651,7 +648,7 @@ class ObservableInstance {
     const o2 = Rx.Observable.interval(1000).map(v => `1000ms: ${v}`);
     const o3 = Rx.Observable.interval(500).map(v => `500ms: ${v}`);
     o1.race(o2, o3)
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -660,7 +657,7 @@ class ObservableInstance {
   reduce(): void {
     const o1 = Rx.Observable.of(1, 2, 3, 4, 5, 6, 7, 8, 9);
     o1.reduce((acc, c) => acc + c, 0)
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -669,7 +666,7 @@ class ObservableInstance {
   repeat(): void {
     const o1 = Rx.Observable.of(1, 2, 3, 4, 5, 6, 7, 8, 9);
     o1.repeat(3)
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -678,7 +675,7 @@ class ObservableInstance {
   repeatWhen(): void {
     Rx.Observable.of(1, 2, 3)
       .repeatWhen(attempts => attempts.delay(1000))
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -693,7 +690,7 @@ class ObservableInstance {
         return n;
       })
       .retry(2)
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -708,7 +705,7 @@ class ObservableInstance {
         return n;
       })
       .retryWhen(errors => errors.delay(1000))
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -720,7 +717,7 @@ class ObservableInstance {
     const clickMock = Rx.Observable.interval(5000).map(v => `CLICK_MOCK: ${v}`);
     Rx.Observable.interval(1000)
       .sample(clickMock)
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -731,7 +728,7 @@ class ObservableInstance {
   sampleTime(): void {
     const clickMock = Rx.Observable.interval(100).map(v => `CLICK_MOCK: ${v}`);
     clickMock.sampleTime(1000)
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -740,7 +737,7 @@ class ObservableInstance {
   scan(): void {
     const o1 = Rx.Observable.of(1, 2, 3, 4, 5, 6, 7, 8, 9);
     o1.scan((acc, c) => acc + c, 0)
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -750,7 +747,7 @@ class ObservableInstance {
     const compareObservable = Rx.Observable.interval(1000).take(10);
     Rx.Observable.of(0,1,2,3,4,5,6,7,8,9)
       .sequenceEqual(compareObservable)
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -758,11 +755,11 @@ class ObservableInstance {
    */
   share(): void {
     const o1 = Rx.Observable.interval(1000).map(v => `SOURCE: ${v}`).do(_ => console.log("DO"));
-    o1.subscribe(...args);
-    o1.subscribe(...args);
+    o1.subscribe(...callbacks);
+    o1.subscribe(...callbacks);
     const share = o1.share();
-    share.subscribe(...args);
-    share.subscribe(...args);
+    share.subscribe(...callbacks);
+    share.subscribe(...callbacks);
   }
 
   /**
@@ -777,7 +774,7 @@ class ObservableInstance {
   single(): void {
     Rx.Observable.of("a", "b", "c", "b", "c")
       .single((v) => v === "a")
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -786,7 +783,7 @@ class ObservableInstance {
   skip(): void {
     Rx.Observable.of("a", "b", "c", "d", "e")
       .skip(3)
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -795,7 +792,7 @@ class ObservableInstance {
   skipLast(): void {
     Rx.Observable.of("a", "b", "c", "d", "e")
       .skipLast(1)
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -804,7 +801,7 @@ class ObservableInstance {
   skipUntil(): void {
     Rx.Observable.interval(1000).map(v => `SOURCE: ${v}`)
       .skipUntil(Rx.Observable.interval(3000))
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -814,7 +811,7 @@ class ObservableInstance {
   skipWhile(): void {
     Rx.Observable.interval(1000)
       .skipWhile((v) => v < 5)
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -823,7 +820,7 @@ class ObservableInstance {
   startWith(): void {
     Rx.Observable.of(1, 2, 3)
       .startWith(<any>"a")
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -860,7 +857,7 @@ class ObservableInstance {
     const clickMock = Rx.Observable.interval(5000).map(v => `CLICK_MOCK: ${v}`);
     clickMock.map(v => Rx.Observable.interval(1000))
       .switch()
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -869,7 +866,7 @@ class ObservableInstance {
   switchMap(): void {
     const clickMock = Rx.Observable.interval(5000).map(v => `CLICK_MOCK: ${v}`);
     clickMock.switchMap(v => Rx.Observable.interval(1000))
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -878,7 +875,7 @@ class ObservableInstance {
   switchMapTo(): void {
     const clickMock = Rx.Observable.interval(5000).map(v => `CLICK_MOCK: ${v}`);
     clickMock.switchMapTo(Rx.Observable.interval(1000))
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -887,7 +884,7 @@ class ObservableInstance {
   take(): void {
     Rx.Observable.of("a", "b", "c", "d", "e")
       .take(2)
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -897,7 +894,7 @@ class ObservableInstance {
     Rx.Observable.interval(1000)
       .take(5)
       .takeLast(2)
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -907,7 +904,7 @@ class ObservableInstance {
     const clickMock = Rx.Observable.interval(5000).map(v => `CLICK_MOCK: ${v}`);
     Rx.Observable.interval(1000)
       .takeUntil(clickMock)
-      .subscribe(...args)
+      .subscribe(...callbacks)
   }
 
   /**
@@ -917,7 +914,7 @@ class ObservableInstance {
   takeWhile(): void {
     Rx.Observable.interval(1000)
       .takeWhile(v => v < 5)
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -927,7 +924,7 @@ class ObservableInstance {
   throttle(): void {
     const clickMock = Rx.Observable.interval(5000).map(v => `CLICK_MOCK: ${v}`);
     Rx.Observable.interval(1000).throttle(v => clickMock.map(vv => v))
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -936,7 +933,7 @@ class ObservableInstance {
   throttleTime(): void {
     Rx.Observable.interval(1000)
       .throttleTime(5000)
-      .subscribe(...args)
+      .subscribe(...callbacks)
   }
 
   /**
@@ -945,7 +942,7 @@ class ObservableInstance {
   timeInterval(): void {
     Rx.Observable.of("a", "b", "c")
       .timeInterval()
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -954,7 +951,7 @@ class ObservableInstance {
   timeout(): void {
     Rx.Observable.interval(1000)
       .timeout(500)
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -964,14 +961,14 @@ class ObservableInstance {
     const o1 = Rx.Observable.interval(1000);
     const o2 = Rx.Observable.interval(100);
     o1.timeoutWith(900, o2)
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
    * timestamp が付与された
    */
   timestamp(): void {
-    Rx.Observable.interval(1000).timestamp().subscribe(...args);
+    Rx.Observable.interval(1000).timestamp().subscribe(...callbacks);
   }
 
   /**
@@ -980,7 +977,7 @@ class ObservableInstance {
   toArray(): void {
     Rx.Observable.of("a", "b", "c")
       .toArray()
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -991,7 +988,7 @@ class ObservableInstance {
     clickMock.window(Rx.Observable.interval(1000))
       .map(w => w.take(2))
       .mergeAll()
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -1002,12 +999,12 @@ class ObservableInstance {
     clickMock.windowCount(3)
       .map(w => w.skip(1)) // 3番目が毎回スキップされる
       .mergeAll()
-      .subscribe(...args);
+      .subscribe(...callbacks);
 
     const clickMock2 = Rx.Observable.interval(1000).map(v => `CLICK_MOCK: ${v}`);
     clickMock2.windowCount(2, 10) // 10回ごとに2回出力
       .mergeAll()
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -1018,7 +1015,7 @@ class ObservableInstance {
     clickMock.windowToggle(Rx.Observable.interval(5000), (v) => {
       return v % 2 === 0 ? Rx.Observable.interval(1000) : Rx.Observable.empty();
     }).mergeAll()
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -1029,7 +1026,7 @@ class ObservableInstance {
     clickMock.windowWhen(() => Rx.Observable.interval(1000))
       .map(w => w.take(2))
       .mergeAll()
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -1039,7 +1036,7 @@ class ObservableInstance {
     const clickMock = Rx.Observable.interval(100).map(v => `CLICK_MOCK: ${v}`);
     const seconds = Rx.Observable.interval(1000);
     seconds.withLatestFrom(clickMock)
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -1051,7 +1048,7 @@ class ObservableInstance {
     const name = Rx.Observable.of("Hoge", "Foo", "Bar");
     const developer = Rx.Observable.of(true, true, false);
     clickMock.zip(age, name, developer)
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 
   /**
@@ -1064,7 +1061,7 @@ class ObservableInstance {
     const developer = Rx.Observable.of(true, true, false);
     clickMock.map(v => `TEST: ${v}`)
       .zipAll()
-      .subscribe(...args);
+      .subscribe(...callbacks);
   }
 }
 
