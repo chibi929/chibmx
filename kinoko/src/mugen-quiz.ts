@@ -1,20 +1,33 @@
 import { IQuizAdapter, Quiz } from './quiz-adapter';
 
 /**
+ * MugenQuiz のオプション
+ */
+export interface IOptions {
+  /**
+   * 開始位置のインデックス
+   */
+  startIndex: number;
+}
+
+/**
  * 無限ループ用クイズクラス
  * 現行のシステムの一部をクラスに分離したもの
  */
 export class MugenQuiz implements IQuizAdapter {
+  private currentIndex: number = 0;
+
   /**
    * コンストラクタ
    *
    * @param quizzes クイズオブジェクト配列
-   * @param currentIndex 現在のインデックス(途中から開始可能)
+   * @param options オプション
    */
   constructor(
     private readonly quizzes: Quiz[],
-    private currentIndex: number
+    options: IOptions
   ) {
+    this.currentIndex = options.startIndex || this.currentIndex;
   }
 
   /**
