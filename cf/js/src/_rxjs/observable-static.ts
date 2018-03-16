@@ -1,8 +1,5 @@
 import * as Rx from 'rxjs';
-
-function next(next: any): void { console.log(`next: ${next}`); }
-function error(err: any): void { console.log(`error: ${err}`); }
-function complete(): void { console.log(`complete: `); }
+import { callbacks } from './subscribe-callback-impl';
 
 class ObservableStatic {
   /**
@@ -28,13 +25,13 @@ class ObservableStatic {
     }
 
     const o1 = Rx.Observable.bindCallback(m1);
-    o1().subscribe(next, error, complete);
+    o1().subscribe(...callbacks);
 
     const o2 = Rx.Observable.bindCallback(m2);
-    o2("Hello").subscribe(next, error, complete);
+    o2("Hello").subscribe(...callbacks);
 
     const o3 = Rx.Observable.bindCallback(m3);
-    o3("Hello", "World").subscribe(next, error, complete);
+    o3("Hello", "World").subscribe(...callbacks);
   }
 
   /**
@@ -60,13 +57,13 @@ class ObservableStatic {
     }
 
     const o1 = Rx.Observable.bindNodeCallback(m1);
-    o1().subscribe(next, error, complete);
+    o1().subscribe(...callbacks);
 
     const o2 = Rx.Observable.bindNodeCallback(m2);
-    o2().subscribe(next, error, complete);
+    o2().subscribe(...callbacks);
 
     const o3 = Rx.Observable.bindNodeCallback(m3);
-    o3("Hello").subscribe(next, error, complete);
+    o3("Hello").subscribe(...callbacks);
   }
 
   /**
@@ -83,7 +80,7 @@ class ObservableStatic {
   combineLatest(): void {
     const o1 = Rx.Observable.timer(0, 1000);
     const o2 = Rx.Observable.timer(0, 2000);
-    Rx.Observable.combineLatest(o1, o2).subscribe(next, error, complete);
+    Rx.Observable.combineLatest(o1, o2).subscribe(...callbacks);
   }
 
   /**
@@ -93,7 +90,7 @@ class ObservableStatic {
     const o1 = Rx.Observable.interval(100).take(5);
     const o2 = Rx.Observable.interval(500).take(5);
     const o3 = Rx.Observable.interval(1000).take(5);
-    Rx.Observable.concat(o1, o2, o3).subscribe(next, error, complete);
+    Rx.Observable.concat(o1, o2, o3).subscribe(...callbacks);
   }
 
   /**
@@ -106,12 +103,12 @@ class ObservableStatic {
       observer.next(3);
       observer.complete();
     });
-    o1.subscribe(next, error, complete);
+    o1.subscribe(...callbacks);
 
     const o2: Rx.Observable<any> = Rx.Observable.create(observer => {
       observer.error("Error");
     });
-    o2.subscribe(next, error, complete);
+    o2.subscribe(...callbacks);
   }
 
   /**
@@ -122,7 +119,7 @@ class ObservableStatic {
     const o1 = Rx.Observable.defer(() => {
       return Rx.Observable.interval(1000);
     })
-    o1.subscribe(next, error, complete);
+    o1.subscribe(...callbacks);
   }
 
   /**
@@ -130,7 +127,7 @@ class ObservableStatic {
    */
   empty(): void {
     const o1 = Rx.Observable.empty();
-    o1.subscribe(next, error, complete);
+    o1.subscribe(...callbacks);
   }
 
   /**
@@ -139,11 +136,11 @@ class ObservableStatic {
   forkJoin(): void {
     const o1 = Rx.Observable.of(1, 2, 3, 4);
     const o2 = Rx.Observable.of(5, 6, 7, 8);
-    Rx.Observable.forkJoin(o1, o2).subscribe(next, error, complete);
+    Rx.Observable.forkJoin(o1, o2).subscribe(...callbacks);
 
     const o3 = Rx.Observable.interval(1000).take(3)
     const o4 = Rx.Observable.interval(500).take(4);
-    Rx.Observable.forkJoin(o3, o4).subscribe(next, error, complete);
+    Rx.Observable.forkJoin(o3, o4).subscribe(...callbacks);
   }
 
   /**
@@ -151,7 +148,7 @@ class ObservableStatic {
    */
   from(): void {
     const o1 = Rx.Observable.from([10, 20, 30]);
-    o1.subscribe(next, error, complete);
+    o1.subscribe(...callbacks);
   }
 
   /**
@@ -159,7 +156,7 @@ class ObservableStatic {
    */
   fromEvent(): void {
     const o1 = Rx.Observable.fromEvent(document, 'click');
-    o1.subscribe(next, error, complete);
+    o1.subscribe(...callbacks);
   }
 
   /**
@@ -174,7 +171,7 @@ class ObservableStatic {
         document.removeEventListener('click', handler);
       }
     );
-    o1.subscribe(next, error, complete);
+    o1.subscribe(...callbacks);
   }
 
   /**
@@ -188,7 +185,7 @@ class ObservableStatic {
         }, 1000);
       });
     };
-    Rx.Observable.fromPromise(func1()).subscribe(next, error, complete);
+    Rx.Observable.fromPromise(func1()).subscribe(...callbacks);
 
     const func2 = () => {
       return new Promise((resolve, reject) => {
@@ -197,7 +194,7 @@ class ObservableStatic {
         }, 1000);
       });
     };
-    Rx.Observable.fromPromise(func2()).subscribe(next, error, complete);
+    Rx.Observable.fromPromise(func2()).subscribe(...callbacks);
 
     const func3 = () => {
       return new Promise((resolve, reject) => {
@@ -206,14 +203,14 @@ class ObservableStatic {
         }, 1000);
       });
     };
-    Rx.Observable.fromPromise(func3()).subscribe(next, error, complete);
+    Rx.Observable.fromPromise(func3()).subscribe(...callbacks);
   }
 
   /**
    * 定期的に発行する Observable を作成する
    */
   interval(): void {
-    Rx.Observable.interval(1000).subscribe(next, error, complete);
+    Rx.Observable.interval(1000).subscribe(...callbacks);
   }
 
   /**
@@ -223,14 +220,14 @@ class ObservableStatic {
     const o1 = Rx.Observable.interval(100).take(5);
     const o2 = Rx.Observable.interval(500).take(5);
     const o3 = Rx.Observable.interval(1000).take(5);
-    Rx.Observable.merge(o1, o2, o3).subscribe(next, error, complete);
+    Rx.Observable.merge(o1, o2, o3).subscribe(...callbacks);
   }
 
   /**
    * 何もしない Observable を作成する
    */
   never(): void {
-    Rx.Observable.never().subscribe(next, error, complete);
+    Rx.Observable.never().subscribe(...callbacks);
   }
 
   /**
@@ -238,10 +235,10 @@ class ObservableStatic {
    */
   of(): void {
     const o1 = Rx.Observable.of(10, 20, 30);
-    o1.subscribe(next, error, complete);
+    o1.subscribe(...callbacks);
 
     const o2 = Rx.Observable.of('a', 'b', 'c');
-    o2.subscribe(next, error, complete);
+    o2.subscribe(...callbacks);
   }
 
   /**
@@ -249,24 +246,24 @@ class ObservableStatic {
    */
   range(): void {
     const o1 = Rx.Observable.range(1, 10);
-    o1.subscribe(next, error, complete);
+    o1.subscribe(...callbacks);
 
     const o2 = Rx.Observable.range(5, 10);
-    o2.subscribe(next, error, complete);
+    o2.subscribe(...callbacks);
   }
 
   /**
    * エラーを発行する Observable を作成する
    */
   throw(): void {
-    Rx.Observable.throw("error").subscribe(next, error, complete);
+    Rx.Observable.throw("error").subscribe(...callbacks);
   }
 
   /**
    * 開始時刻を指定して定期的に発行する Observable を作成する
    */
   timer(): void {
-    Rx.Observable.timer(3000, 1000).subscribe(next, error, complete);
+    Rx.Observable.timer(3000, 1000).subscribe(...callbacks);
   }
 
   /**
@@ -289,7 +286,7 @@ class ObservableStatic {
     const age = Rx.Observable.of(10, 20, 30);
     const name = Rx.Observable.of("Hoge", "Foo", "Bar");
     const developer = Rx.Observable.of(true, true, false);
-    Rx.Observable.zip(age, name, developer).subscribe(next, error, complete);
+    Rx.Observable.zip(age, name, developer).subscribe(...callbacks);
   }
 }
 
