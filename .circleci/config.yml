@@ -10,7 +10,8 @@ jobs:
           command: |
             curl -fsSL https://clis.ng.bluemix.net/install/linux | sh
             bx api https://api.ng.bluemix.net
-            bx login -u $BMX_USER -p $BMX_PASS -o $BMX_ORG -s dev > /dev/null 2>&1
+            bx login -u $BMX_USER -p $BMX_PASS > /dev/null 2>&1
+            bx target -o $BMX_ORG -s $BMX_SPACE > /dev/null 2>&1
             cd cf/js
             yarn
       - run:
