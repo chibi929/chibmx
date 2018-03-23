@@ -95,6 +95,19 @@ export namespace ConditionalBooleanOperators {
       .sequenceEqual(compareObservable)
       .subscribe(...callbacks);
   }
+
+  /**
+   * `predicate` で指定する値が１つしかない場合は成功
+   */
+  export function single(): void {
+    Rx.Observable.of('a', 'b', 'c', 'b', 'e')
+      .single(v => v === 'a')
+      .subscribe(...callbacks);
+
+    Rx.Observable.of('a', 'b', 'c', 'b', 'e')
+      .single(v => v === 'b')
+      .subscribe(...callbacks);
+  }
 }
 
 //ConditionalBooleanOperators.defaultIfEmpty();
@@ -103,3 +116,4 @@ export namespace ConditionalBooleanOperators {
 //ConditionalBooleanOperators.findIndex();
 //ConditionalBooleanOperators.isEmpty();
 //ConditionalBooleanOperators.sequenceEqual();
+//ConditionalBooleanOperators.single();
