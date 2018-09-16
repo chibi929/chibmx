@@ -21,7 +21,7 @@ export namespace ConditionalBooleanOperators {
 
   /**
    * `predicate` で指定する条件を全ての値が満たしているかどうかを発行する
-   * - Array.every と同じ
+   * - `Array.every()` と同じ
    */
   export function every(): void {
     Rx.Observable.of(1, 2, 3, 4, 5)
@@ -35,7 +35,7 @@ export namespace ConditionalBooleanOperators {
 
   /**
    * `predicate` で指定する条件を満たす値を発行する
-   * - Array.find と同じ
+   * - `Array.find()` と同じ
    */
   export function find(): void {
     Rx.Observable.of(1, 2, 3, 4, 5)
@@ -53,7 +53,7 @@ export namespace ConditionalBooleanOperators {
 
   /**
    * `predicate` で指定する条件を満たす値のインデックスを発行する
-   * - Array.findIndex と同じ
+   * - `Array.findIndex()` と同じ
    */
   export function findIndex(): void {
     Rx.Observable.of(1, 2, 3, 4, 5)

@@ -41,7 +41,8 @@ export namespace CreateOperators {
 
   /**
    * `(err, data) => void` のような良くあるコールバック付きの関数から Observable を作成する
-   * - `bindCallback` とだいたい同じ
+   * - `bindCallback()` を先に知っておいた方が良い
+   * - `bindCallback()` とだいたい同じ
    */
   export function bindNodeCallback(): void {
     function m1(cb: (err, data?) => void) {
@@ -124,8 +125,8 @@ export namespace CreateOperators {
 
   /**
    * `addHandler` , `removeHandler` に基づいて Observable を作成する
-   * - あまりよくわかってない
-   * - たぶん `fromEvent` とだいたい同じ
+   * - `fromEvent()` を先に知っておいた方が良い
+   * - あまりよくわかってないが、たぶん `fromEvent()` とだいたい同じ
    */
   export function fromEventPattern(): void {
     Rx.Observable.fromEventPattern(
@@ -220,7 +221,7 @@ export namespace CreateOperators {
 
   /**
    * 開始時刻を指定して定期的に発行する Observable を作成する
-   * - `interval` とだいたい同じ
+   * - `interval()` とだいたい同じ
    */
   export function timer(): void {
     Rx.Observable.timer(3000, 1000)
@@ -236,9 +237,10 @@ export namespace CreateOperators {
       .subscribe(...callbacks);
   }
 
-  /*
+  /**
    * `notifier` が発行された時に本線を繰り返す Observable を作成する？
-   * - あまりよくわかってない
+   * - `repeat()` を先に知っておいたほうが良い
+   * - あまりよくわかってないが、たぶん `repeat()` とだいたい同じ
    */
   export function repeatWhen(): void {
     Rx.Observable.of('a', 'b', 'c')

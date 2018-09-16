@@ -47,6 +47,7 @@ export namespace TransformationOperators {
 
   /**
    * Observable が発行する値を `closingSelector` による通知があるまでバッファしてとく
+   * - `buffer()` を先に知っておいた方が良い
    * - `buffer()` との違いは `closingSelector` の Observable に `.take(3)` とか付けても効き目がない？
    */
   export function bufferWhen(): void {
@@ -283,8 +284,8 @@ export namespace TransformationOperators {
 
   /**
    * `windowSize` 毎に本線が分岐する
-   * - あまり良くわかってない
    * - `window()` を先に知っておいたほうが良い
+   * - あまり良くわかってない
    */
   export function windowCount(): void {
     Rx.Observable.interval(100)
@@ -296,8 +297,8 @@ export namespace TransformationOperators {
 
   /**
    * Observable が発行する値を `openings` 毎に本線が分岐し `closingSelector` されるまで発行される
-   * - あまり良くわかってない
    * - `window()` を先に知っておいたほうが良い
+   * - あまり良くわかってない
    */
   export function windowToggle(): void {
     Rx.Observable.interval(100)
@@ -308,8 +309,8 @@ export namespace TransformationOperators {
 
   /**
    * `closingSelector`毎に本線が分岐する
-   * - あまり良くわかってない
    * - `window()` を先に知っておいたほうが良い
+   * - あまり良くわかってない
    * - `window()` との違いもわからない
    */
   export function windowWhen(): void {

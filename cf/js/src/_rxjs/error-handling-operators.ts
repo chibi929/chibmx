@@ -41,7 +41,9 @@ export namespace ErrorHandlingOperators {
   }
 
   /**
-   *
+   * Observable がエラーを発行したら `notifier` を基にリトライを行う
+   * - `retry()` を先に知っておいたほうが良い
+   * - あまりよくわかってないが、たぶん `retry()` とだいたい同じ
    */
   export function retryWhen(): void {
     Rx.Observable.interval(1000)

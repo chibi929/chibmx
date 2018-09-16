@@ -15,7 +15,7 @@ export namespace UtilityOperators {
 
   /**
    * Observable の発行を `delayDurationSelector` で返却する Observable が発行させる
-   * - `delay` とだいたい同じ
+   * - `delay()` を先に知っておいたほうが良い
    */
   export function delayWhen(): void {
     Rx.Observable.of('a', 'bbbb', 'cccccccc')
@@ -27,7 +27,7 @@ export namespace UtilityOperators {
 
   /**
    * `Rx.Notification` を `Observable` に変換する？
-   * - `materialize` の逆(先に `materialize` 見たほうがいいかも)
+   * - `materialize()` の逆(先に `materialize()` 見たほうがいいかも)
    * - あまりよくわかってない
    */
   export function dematerialize(): void {
@@ -142,6 +142,7 @@ export namespace UtilityOperators {
 
   /**
    * タイムアウト時刻まで発行が無い場合は別の Observable を発行する
+   * - `timeout()` を先に知っておいたほうが良い
    * - `timeout` + `catch` な感じ？
    */
   export function timeoutWith(): void {
@@ -223,7 +224,7 @@ export namespace UtilityOperators {
 
   /**
    * Observable が発行を Subscribeする前にフックできる？
-   * - `do` の Observable 版？
+   * - `do()` の Observable 版？
    * - あまりよくわかってない
    */
   export function let_(): void {
@@ -271,7 +272,7 @@ export namespace UtilityOperators {
 
   /**
    * Observable ではなく Promise で最後の値を取得する
-   * - Promise で購読する場合は `forEach` を使う？
+   * - Promise で購読する場合は `forEach()` を使う？
    */
   export function toPromise(): void {
     Rx.Observable.of('a', 'bbbb', 'cccccccc')

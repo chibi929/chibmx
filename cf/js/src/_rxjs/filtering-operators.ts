@@ -22,7 +22,7 @@ export namespace FilteringOperators {
 
   /**
    * Observable は `duration` で指定された時刻が来たら最新の値を発行する
-   * - 細かい指定はできないが `audit` とだいたい同じ
+   * - `audit()` を先に知っておいたほうが良い
    */
   export function auditTime(): void {
     Rx.Observable.interval(100)
@@ -43,9 +43,9 @@ export namespace FilteringOperators {
 
   /**
    * `dueTime` で指定した時間まで遅延する
+   * - `debounce()` を先に知っておいたほうが良い
    * - `dueTime` が経つ前に次の値が発行したら遅延した値は消える
    * - あまりよくわかってないが、そんな感じと思われる・・・。
-   * - `debounce` とだいたい同じ
    */
   export function debounceTime(): void {
     Rx.Observable.interval(1000)
@@ -64,6 +64,7 @@ export namespace FilteringOperators {
 
   /**
    * Observable が発行する値のうち、直前の値と同じ場合は排除する
+   * - `distinct()` を先に知っておいたほうが良い
    */
   export function distinctUntilChanged(): void {
     Rx.Observable.of(1, 1, 2, 2, 2, 1, 2, 4, 3, 2, 3, 1)
@@ -73,6 +74,7 @@ export namespace FilteringOperators {
 
   /**
    * Observable が発行する値のうち、特定の Key に対して直前の値と同じ場合は排除する
+   * - `distinct()` を先に知っておいたほうが良い
    */
   export function distinctUntilKeyChanged(): void {
     Rx.Observable.of(
@@ -103,7 +105,7 @@ export namespace FilteringOperators {
 
   /**
    * Observable が発行する値を `predicate` で指定した条件にフィルタする
-   * - Array.filter と同じ
+   * - `Array.filter()` と同じ
    */
   export function filter(): void {
     Rx.Observable.range(1, 5)
@@ -164,6 +166,7 @@ export namespace FilteringOperators {
 
   /**
    * `period` で指定された時間が経った時に最新の値を発行する
+   * - `sample()` を先に知っておいたほうが良い
    * - 最新の値に変化がない場合は何も起きない
    */
   export function sampleTime(): void {
@@ -187,6 +190,7 @@ export namespace FilteringOperators {
 
   /**
    * Observable が発行する値を `count` だけ後ろからスキップする
+   * - `skip()` を先に知っておいたほうが良い
    */
   export function skipLast(): void {
     Rx.Observable.range(1, 5)
@@ -196,6 +200,7 @@ export namespace FilteringOperators {
 
   /**
    * `notifier` で指定された Observable による通知があるまでスキップする
+   * - `skip()` を先に知っておいたほうが良い
    */
   export function skipUntil(): void {
     Rx.Observable.interval(1000)
@@ -205,6 +210,7 @@ export namespace FilteringOperators {
 
   /**
    * `predicate` で指定する条件が true の間はスキップする
+   * - `skip()` を先に知っておいたほうが良い
    * - 一度条件から外れると発行が行われる
    * - (途中から再びスキップされる。とかは無い)
    */
@@ -229,6 +235,7 @@ export namespace FilteringOperators {
 
   /**
    * Observable が発行する値のうち、ラスト `count` 回だけ発行する
+   * - `take()` を先に知っておいた方が良い
    */
   export function takeLast(): void {
     Rx.Observable.interval(1000)
@@ -239,6 +246,7 @@ export namespace FilteringOperators {
 
   /**
    * `notifier` に指定された Observable による通知があるまで発行する
+   * - `take()` を先に知っておいた方が良い
    */
   export function takeUntil(): void {
     Rx.Observable.interval(1000)
@@ -248,6 +256,7 @@ export namespace FilteringOperators {
 
   /**
    * `predicate` が true の間は発行する
+   * - `take()` を先に知っておいた方が良い
    * - 一度条件から外れたら終了
    * - (途中から再び発行し始める。とかは無い)
    */
@@ -269,6 +278,7 @@ export namespace FilteringOperators {
 
   /**
    * `duration` で指定するバージョン
+   * - `throttle()` を先に知っておいた方が良い
    */
   export function throttleTime(): void {
     Rx.Observable.interval(1000)
