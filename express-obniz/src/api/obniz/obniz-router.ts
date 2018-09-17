@@ -16,6 +16,16 @@ export class ObnizRouter {
       res.send(`Calling the GET '/obniz/disconnect'`);
     });
 
+    router.get('/voltage', async (req, res) => {
+      ObnizHolder.obniz.io0.output(true);
+      ObnizHolder.obniz.io1.output(false);
+      const voltage = await ObnizHolder.obniz.ad0.getWait();
+      console.log(voltage);
+      ObnizHolder.obniz.wait(1000);
+      ObnizHolder.obniz.io0.output(false);
+      res.send(`Calling the GET '/obniz/voltage'`);
+    });
+
     router.get('/led/on', (req, res) => {
       const led = ObnizHolder.obniz.wired("LED", {anode:0, cathode:1});
       led.on();
