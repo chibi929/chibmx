@@ -21,7 +21,7 @@ export class TelloApi extends RequestHandler {
       break;
     case TelloRequest.CmdType.Forward:
       tello.command();
-      tello.forward(50);
+      tello.forward(200);
       break;
     case TelloRequest.CmdType.BackFlip:
       tello.command();
