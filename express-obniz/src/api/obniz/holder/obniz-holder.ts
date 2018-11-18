@@ -16,7 +16,6 @@ export class ObnizHolder {
     this.obniz.onclose = async () => {
       (<any>this.connected) = false;
     };
-
   }
 
   static disconnect(): void {
