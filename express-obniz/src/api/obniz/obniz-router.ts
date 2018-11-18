@@ -5,6 +5,10 @@ export class ObnizRouter {
   static getRouter() {
     const router = express.Router();
 
+    router.get('/', (req, res) => {
+      res.send(`Hello /obniz`);
+    });
+
     router.get('/connect', (req, res) => {
       ObnizHolder.connect(process.env.OBNIZ_ID);
       res.send(`Calling the GET '/obniz/connect'`);
