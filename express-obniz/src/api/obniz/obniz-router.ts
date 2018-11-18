@@ -19,6 +19,28 @@ export class ObnizRouter {
       res.send(`Calling the GET '/obniz/disconnect'`);
     });
 
+    let intervalId;
+    router.get('/xmas/:id/on', (req, res) => {
+      const id = req.params['id'];
+      if (isNaN(id) || id < 0 || 5 < id) {
+        res.status(400).send(`Failed to :id: ${id}`);
+        return;
+      }
+      const pin1 = id * 2;
+      const pin2 = pin1 + 1;
+
+      let xmas = ObnizHolder.obniz.wired('DCMotor', { forward: pin1, back: pin2 });
+      xmas.power(10);
+
+      let on = true;
+      intervalId = setInterval(() => {
+        on = !on;
+        on ? xmas.move(on) : xmas.stop();
+      }, 100);
+      xmas.move(on);
+      res.send(`Calling the GET '/obniz/xmas/:id'`);
+    });
+
     router.get('/voltage', async (req, res) => {
       ObnizHolder.obniz.io0.output(true);
       ObnizHolder.obniz.io1.output(false);
