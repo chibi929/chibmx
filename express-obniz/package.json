@@ -26,6 +26,7 @@
     "release-clean": "npm run clean && rm -rf node_modules",
     "start": "node lib/index.js",
     "ngrok": "ngrok http 3000",
+    "deploy": "bx app push",
     "test": "echo \"Error: no test specified\" && exit 1"
   }
 }
