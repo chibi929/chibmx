@@ -16,10 +16,12 @@ export class ObnizRouter {
 
     router.get('/disconnect', (req, res) => {
       ObnizHolder.disconnect();
+      xmas = {};
       res.send(`Calling the GET '/obniz/disconnect'`);
     });
 
     let intervalId;
+    let xmas = {};
     router.get('/xmas/:id/on', (req, res) => {
       const id = req.params['id'];
       if (isNaN(id) || id < 0 || 5 < id) {
@@ -29,15 +31,17 @@ export class ObnizRouter {
       const pin1 = id * 2;
       const pin2 = pin1 + 1;
 
-      let xmas = ObnizHolder.obniz.wired('DCMotor', { forward: pin1, back: pin2 });
-      xmas.power(10);
+      if (!xmas[id]) {
+        xmas[id] = ObnizHolder.obniz.wired('DCMotor', { forward: pin1, back: pin2 });
+      }
+      xmas[id].power(10);
 
       let on = true;
       intervalId = setInterval(() => {
         on = !on;
-        on ? xmas.move(on) : xmas.stop();
+        on ? xmas[id].move(on) : xmas[id].stop();
       }, 100);
-      xmas.move(on);
+      xmas[id].move(on);
       res.send(`Calling the GET '/obniz/xmas/:id'`);
     });
 
@@ -50,9 +54,8 @@ export class ObnizRouter {
       const pin1 = id * 2;
       const pin2 = pin1 + 1;
 
-      let xmas = ObnizHolder.obniz.wired('DCMotor', { forward: pin1, back: pin2 });
       clearInterval(intervalId);
-      xmas.stop();
+      xmas[id].stop();
       res.send(`Calling the GET '/obniz/xmas/:id/off'`);
     });
 
