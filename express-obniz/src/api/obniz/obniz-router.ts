@@ -30,7 +30,8 @@ export class ObnizRouter {
       const pin1 = id * 2;
       const pin2 = pin1 + 1;
 
-      if (!!xmas[id]) {
+      if (!xmas[id]) {
+        xmas[id] = {} as any;
         xmas[id].iot = ObnizHolder.obniz.wired('DCMotor', { forward: pin1, back: pin2 });
         xmas[id].iot.power(10);
       }
