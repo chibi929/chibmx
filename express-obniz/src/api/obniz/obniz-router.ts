@@ -7,24 +7,24 @@ export class ObnizRouter {
     const xmas: { [id: number]: { intervalId: any; iot: any } } = {} as any;
 
     router.get('/', (req, res) => {
-      res.send(`Hello /obniz`);
+      res.send({ message: `Hello /obniz` });
     });
 
     router.get('/connect', (req, res) => {
       ObnizHolder.connect(process.env.OBNIZ_ID);
-      res.send(`Calling the GET '/obniz/connect'`);
+      res.send({ message: `Calling the GET '/obniz/connect'` });
     });
 
     router.get('/disconnect', (req, res) => {
       ObnizHolder.disconnect();
       (<any>xmas) = {};
-      res.send(`Calling the GET '/obniz/disconnect'`);
+      res.send({ message: `Calling the GET '/obniz/disconnect'` });
     });
 
     router.get('/xmas/:id/on', (req, res) => {
       const id = req.params['id'];
       if (isNaN(id) || id < 0 || 5 < id) {
-        res.status(400).send(`Failed to :id: ${id}`);
+        res.status(400).send({ message: `Failed to :id: ${id}` });
         return;
       }
       const pin1 = id * 2;
@@ -43,19 +43,19 @@ export class ObnizRouter {
       }, 100);
 
       xmas[id].iot.move(on);
-      res.send(`Calling the GET '/obniz/xmas/:id'`);
+      res.send({ message: `Calling the GET '/obniz/xmas/:id'` });
     });
 
     router.get('/xmas/:id/off', (req, res) => {
       const id = req.params['id'];
       if (isNaN(id) || id < 0 || 5 < id) {
-        res.status(400).send(`Failed to :id: ${id}`);
+        res.status(400).send({ message: `Failed to :id: ${id}` });
         return;
       }
 
       clearInterval(xmas[id].intervalId);
       xmas[id].iot.stop();
-      res.send(`Calling the GET '/obniz/xmas/:id/off'`);
+      res.send({ message: `Calling the GET '/obniz/xmas/:id/off'` });
     });
 
     router.get('/voltage', async (req, res) => {
@@ -65,31 +65,31 @@ export class ObnizRouter {
       console.log(voltage);
       ObnizHolder.obniz.wait(1000);
       ObnizHolder.obniz.io0.output(false);
-      res.send(`Calling the GET '/obniz/voltage'`);
+      res.send({ message: `Calling the GET '/obniz/voltage'` });
     });
 
     router.get('/led/on', (req, res) => {
       const led = ObnizHolder.obniz.wired('LED', { anode: 0, cathode: 1 });
       led.on();
-      res.send(`Calling the GET '/obniz/led/on'`);
+      res.send({ message: `Calling the GET '/obniz/led/on'` });
     });
 
     router.get('/led/off', (req, res) => {
       const led = ObnizHolder.obniz.wired('LED', { anode: 0, cathode: 1 });
       led.off();
-      res.send(`Calling the GET '/obniz/led/off'`);
+      res.send({ message: `Calling the GET '/obniz/led/off'` });
     });
 
     router.get('/led/blink', (req, res) => {
       const led = ObnizHolder.obniz.wired('LED', { anode: 0, cathode: 1 });
       led.blink();
-      res.send(`Calling the GET '/obniz/led/blink'`);
+      res.send({ message: `Calling the GET '/obniz/led/blink'` });
     });
 
     router.get('/led/endBlink', (req, res) => {
       const led = ObnizHolder.obniz.wired('LED', { anode: 0, cathode: 1 });
       led.endBlink();
-      res.send(`Calling the GET '/obniz/led/endBlink'`);
+      res.send({ message: `Calling the GET '/obniz/led/endBlink'` });
     });
 
     return router;
