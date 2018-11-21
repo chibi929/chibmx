@@ -4,6 +4,7 @@ import { ObnizHolder } from './holder/obniz-holder';
 export class ObnizRouter {
   static getRouter() {
     const router = express.Router();
+    const xmas: { [id: number]: { intervalId: any; iot: any } } = {} as any;
 
     router.get('/', (req, res) => {
       res.send(`Hello /obniz`);
@@ -16,12 +17,10 @@ export class ObnizRouter {
 
     router.get('/disconnect', (req, res) => {
       ObnizHolder.disconnect();
-      xmas = {};
+      (<any>xmas) = {};
       res.send(`Calling the GET '/obniz/disconnect'`);
     });
 
-    let intervalId;
-    let xmas = {};
     router.get('/xmas/:id/on', (req, res) => {
       const id = req.params['id'];
       if (isNaN(id) || id < 0 || 5 < id) {
@@ -31,17 +30,18 @@ export class ObnizRouter {
       const pin1 = id * 2;
       const pin2 = pin1 + 1;
 
-      if (!xmas[id]) {
-        xmas[id] = ObnizHolder.obniz.wired('DCMotor', { forward: pin1, back: pin2 });
+      if (!!xmas[id]) {
+        xmas[id].iot = ObnizHolder.obniz.wired('DCMotor', { forward: pin1, back: pin2 });
+        xmas[id].iot.power(10);
       }
-      xmas[id].power(10);
 
       let on = true;
-      intervalId = setInterval(() => {
+      xmas[id].intervalId = setInterval(() => {
         on = !on;
-        on ? xmas[id].move(on) : xmas[id].stop();
+        on ? xmas[id].iot.move(on) : xmas[id].iot.stop();
       }, 100);
-      xmas[id].move(on);
+
+      xmas[id].iot.move(on);
       res.send(`Calling the GET '/obniz/xmas/:id'`);
     });
 
@@ -51,11 +51,9 @@ export class ObnizRouter {
         res.status(400).send(`Failed to :id: ${id}`);
         return;
       }
-      const pin1 = id * 2;
-      const pin2 = pin1 + 1;
 
-      clearInterval(intervalId);
-      xmas[id].stop();
+      clearInterval(xmas[id].intervalId);
+      xmas[id].iot.stop();
       res.send(`Calling the GET '/obniz/xmas/:id/off'`);
     });
 
