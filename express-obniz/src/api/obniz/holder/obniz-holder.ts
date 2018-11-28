@@ -19,8 +19,11 @@ export class ObnizHolder {
   }
 
   static disconnect(): void {
-    this.obniz.reset();
-    this.obniz.close();
+    if (this.obniz && this.connected) {
+      this.obniz.reset();
+      this.obniz.close();
+    }
     (<any>this.obniz) = null;
+    (<any>this.connected) = false;
   }
 }
