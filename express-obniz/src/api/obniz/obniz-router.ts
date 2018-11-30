@@ -30,6 +30,7 @@ export class ObnizRouter {
         res.status(400).send({ message: `Failed to :id: ${id}` });
         return;
       }
+
       const pin1 = id * 2;
       const pin2 = pin1 + 1;
 
@@ -37,6 +38,8 @@ export class ObnizRouter {
         xmas[id] = {} as any;
         xmas[id].iot = ObnizHolder.obniz.wired('DCMotor', { forward: pin1, back: pin2 });
         xmas[id].iot.power(10);
+      } else if (!!xmas[id].intervalId) {
+        return;
       }
 
       let on = true;
@@ -60,6 +63,7 @@ export class ObnizRouter {
       }
 
       clearInterval(xmas[id].intervalId);
+      delete xmas[id].intervalId;
       xmas[id].iot.stop();
       res.send({ message: `Calling the GET '/obniz/xmas/:id/off'` });
     });
