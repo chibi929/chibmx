@@ -4,7 +4,7 @@ import { ObnizHolder } from './holder/obniz-holder';
 export class ObnizRouter {
   static getRouter() {
     const router = express.Router();
-    const xmas: { [id: number]: { intervalId: any; iot: any } } = {} as any;
+    let xmas: { [id: number]: { intervalId: any; iot: any } } = {} as any;
 
     router.get('/', (req, res) => {
       res.send({ message: `Hello /obniz` });
@@ -17,7 +17,10 @@ export class ObnizRouter {
 
     router.get('/disconnect', (req, res) => {
       ObnizHolder.disconnect();
-      (<any>xmas) = {};
+      Object.keys(xmas).forEach(x => {
+        clearInterval(xmas[x].intervalId);
+      });
+      xmas = {};
       res.send({ message: `Calling the GET '/obniz/disconnect'` });
     });
 
@@ -38,6 +41,9 @@ export class ObnizRouter {
 
       let on = true;
       xmas[id].intervalId = setInterval(() => {
+        if (!xmas[id]) {
+          return;
+        }
         on = !on;
         on ? xmas[id].iot.move(on) : xmas[id].iot.stop();
       }, 100);
