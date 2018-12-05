@@ -31,6 +31,7 @@ export class ObnizRouterV2 {
     router.get('/xmas/:id/on', (req, res) => {
       if (!ObnizHolder.connected) {
         res.status(400).send({ message: `Bad Request: Obniz is not connected.` });
+        return;
       }
 
       const id = req.params['id'];
@@ -70,11 +71,20 @@ export class ObnizRouterV2 {
     router.get('/xmas/:id/off', (req, res) => {
       if (!ObnizHolder.connected) {
         res.status(400).send({ message: `Bad Request: Obniz is not connected.` });
+        return;
       }
 
       const id = req.params['id'];
       if (isNaN(id) || id < 0 || 5 < id) {
         res.status(400).send({ message: `Failed to :id: ${id}` });
+        return;
+      }
+
+      if (!xmas[id]) {
+        res.status(400).send({ message: `Not PIKA PIKA. id: ${id}` });
+        return;
+      } else if (!xmas[id].subscription) {
+        res.status(400).send({ message: `Already Stop PIKA PIKA. id: ${id}` });
         return;
       }
 

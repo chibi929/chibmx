@@ -6,7 +6,7 @@ export class ObnizHolder {
 
   static connect(obnizId: string): void {
     if (this.obniz && this.connected) {
-      throw new Error('Already connected.');
+      return;
     }
 
     (<any>this.obniz) = new Obniz(obnizId);
