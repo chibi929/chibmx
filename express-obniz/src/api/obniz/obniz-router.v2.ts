@@ -104,7 +104,7 @@ export class ObnizRouterV2 {
     /**
      * 特化型 ON!
      */
-    router.get('/xmas/specialized/on', (req, res) => {
+    router.get('/xmas-specialized/on', (req, res) => {
       if (!ObnizHolder.obniz && !ObnizHolder.connected) {
         ObnizHolder.connect(process.env.OBNIZ_ID);
       } else {
@@ -130,17 +130,16 @@ export class ObnizRouterV2 {
       };
 
       new Observable(observer => {
-        if (!ObnizHolder.connected) {
-          observer.error();
-          return;
-        }
-        observer.next();
-        observer.complete();
+        setTimeout(() => {
+          if (!ObnizHolder.connected) {
+            observer.error();
+            return;
+          }
+          observer.next();
+          observer.complete();
+        }, 1000);
       })
-        .pipe(
-          delay(1000),
-          retry(60)
-        )
+        .pipe(retry(60))
         .subscribe(null, connectTimeoutHandler, connectCompleteHandler);
     });
 
@@ -148,7 +147,7 @@ export class ObnizRouterV2 {
      * 特化型 OFF!
      * ※といいつつただの 'GET /obniz/v2/disconnect'.
      */
-    router.get('/xmas/specialized/off', (req, res) => {
+    router.get('/xmas-specialized/off', (req, res) => {
       ObnizHolder.disconnect();
       Object.keys(xmas).forEach(key => {
         if (!!xmas[key].subscription) {
