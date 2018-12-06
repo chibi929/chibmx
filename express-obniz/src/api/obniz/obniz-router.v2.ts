@@ -8,6 +8,26 @@ export class ObnizRouterV2 {
     const router = express.Router();
     let xmas: { [id: number]: { subscription: Subscription; iot: any } } = {} as any;
 
+    /**
+     * PIKA!
+     */
+    const pika = id => {
+      let on = true;
+      xmas[id].iot.move(true);
+      return of({})
+        .pipe(
+          delay(100),
+          repeat()
+        )
+        .subscribe(() => {
+          if (!xmas[id] || !xmas[id].iot) {
+            return console.log(`WARNING: xmas[${id}] = ${xmas[id]}, xmas[${id}].iot = ${xmas[id].iot}`);
+          }
+          on = !on;
+          on ? xmas[id].iot.move(true) : xmas[id].iot.stop();
+        });
+    };
+
     router.get('/', (req, res) => {
       res.send({ message: `Hello /v2/obniz` });
     });
@@ -51,20 +71,7 @@ export class ObnizRouterV2 {
         return;
       }
 
-      let on = true;
-      xmas[id].subscription = of({})
-        .pipe(
-          delay(100),
-          repeat()
-        )
-        .subscribe(() => {
-          if (!xmas[id] || !xmas[id].iot) {
-            return console.log(`WARNING: xmas[${id}] = ${xmas[id]}, xmas[${id}].iot = ${xmas[id].iot}`);
-          }
-          on = !on;
-          on ? xmas[id].iot.move(on) : xmas[id].iot.stop();
-        });
-      xmas[id].iot.move(on);
+      xmas[id].subscription = pika(id);
       res.send({ message: `Calling the GET '/obniz/v2/xmas/:id/on'` });
     });
 
@@ -117,20 +124,7 @@ export class ObnizRouterV2 {
         });
 
         wires.forEach((_, i) => {
-          let on = true;
-          xmas[i].subscription = of({})
-            .pipe(
-              delay(100),
-              repeat()
-            )
-            .subscribe(() => {
-              if (!xmas[i] || !xmas[i].iot) {
-                return console.log(`WARNING: xmas[${i}] = ${xmas[i]}, xmas[${i}].iot = ${xmas[i].iot}`);
-              }
-              on = !on;
-              on ? xmas[i].iot.move(true) : xmas[i].iot.stop();
-            });
-          xmas[i].iot.move(true);
+          xmas[i].subscription = pika(i);
         });
         res.send({ message: `Calling the GET '/obniz/v2/xmas/specialized/on'` });
       };
