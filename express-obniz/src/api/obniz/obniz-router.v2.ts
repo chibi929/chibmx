@@ -1,6 +1,6 @@
 import * as express from 'express';
-import { of, Subscription } from 'rxjs';
-import { delay, repeat } from 'rxjs/operators';
+import { of, Subscription, Observable } from 'rxjs';
+import { delay, repeat, retry } from 'rxjs/operators';
 import { ObnizHolder } from './holder/obniz-holder';
 
 export class ObnizRouterV2 {
@@ -92,6 +92,77 @@ export class ObnizRouterV2 {
       delete xmas[id].subscription;
       xmas[id].iot.stop();
       res.send({ message: `Calling the GET '/obniz/xmas/:id/off'` });
+    });
+
+    /**
+     * 特化型 ON!
+     */
+    router.get('/xmas/specialized/on', (req, res) => {
+      if (!ObnizHolder.obniz && !ObnizHolder.connected) {
+        ObnizHolder.connect(process.env.OBNIZ_ID);
+      } else {
+        res.status(400).send({ message: `Bad Request: Call the 'GET /obniz/v2/xmas/specialized/off' first` });
+        return;
+      }
+
+      const connectTimeoutHandler = () => {
+        res.status(504).send({ message: `Timeout: Failed to try connect to Obniz!` });
+      };
+      const connectCompleteHandler = () => {
+        const wires = [{ forward: 0, back: 1 }, { forward: 2, back: 3 }, { forward: 4, back: 5 }];
+        wires.forEach((w, i) => {
+          xmas[i] = {} as any;
+          xmas[i].iot = ObnizHolder.obniz.wired('DCMotor', w);
+          xmas[i].iot.power(10);
+        });
+
+        wires.forEach((_, i) => {
+          let on = true;
+          xmas[i].subscription = of({})
+            .pipe(
+              delay(100),
+              repeat()
+            )
+            .subscribe(() => {
+              if (!xmas[i] || !xmas[i].iot) {
+                return console.log(`WARNING: xmas[${i}] = ${xmas[i]}, xmas[${i}].iot = ${xmas[i].iot}`);
+              }
+              on = !on;
+              on ? xmas[i].iot.move(true) : xmas[i].iot.stop();
+            });
+          xmas[i].iot.move(true);
+        });
+        res.send({ message: `Calling the GET '/obniz/v2/xmas/specialized/on'` });
+      };
+
+      new Observable(observer => {
+        if (!ObnizHolder.connected) {
+          observer.error();
+          return;
+        }
+        observer.next();
+        observer.complete();
+      })
+        .pipe(
+          delay(1000),
+          retry(60)
+        )
+        .subscribe(null, connectTimeoutHandler, connectCompleteHandler);
+    });
+
+    /**
+     * 特化型 OFF!
+     * ※といいつつただの 'GET /obniz/v2/disconnect'.
+     */
+    router.get('/xmas/specialized/off', (req, res) => {
+      ObnizHolder.disconnect();
+      Object.keys(xmas).forEach(key => {
+        if (!!xmas[key].subscription) {
+          xmas[key].subscription.unsubscribe();
+        }
+      });
+      xmas = {};
+      res.send({ message: `Calling the GET '/obniz/v2/xmas/specialized/off'` });
     });
 
     return router;
