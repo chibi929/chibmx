@@ -1,6 +1,7 @@
-# sss-180829
+# sss-190206
 
-This project is for internal seminars to be held on August 29, 2018.
+This project is for internal seminars to be held on February 6, 2019.
+Copied from [sss/180829](../180829).
 
 ## Directory structure
 
