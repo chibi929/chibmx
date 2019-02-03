@@ -88,9 +88,9 @@ const JKIntentHandler = {
     const userWin = 'あなたの勝ち！やりますね！';
     const userLose = '私の勝ち！残念でしたね？<say-as interpret-as="interjection">いつでも挑戦をお待ちしてますよ？</say-as>';
     const draw = '<say-as interpret-as="interjection">あーいこーでしょ！</say-as>';
-    const g = 'https://s3-ap-northeast-1.amazonaws.com/chibi-hanson-vsa76/180829-alexa/g.png';
-    const c = 'https://s3-ap-northeast-1.amazonaws.com/chibi-hanson-vsa76/180829-alexa/c.png';
-    const p = 'https://s3-ap-northeast-1.amazonaws.com/chibi-hanson-vsa76/180829-alexa/p.png';
+    const g = 'https://s3-ap-northeast-1.amazonaws.com/chibi-hanson-vsa76/190206-alexa/g.png';
+    const c = 'https://s3-ap-northeast-1.amazonaws.com/chibi-hanson-vsa76/190206-alexa/c.png';
+    const p = 'https://s3-ap-northeast-1.amazonaws.com/chibi-hanson-vsa76/190206-alexa/p.png';
     const imgs = [g, c, p];
     const randomIndex = Math.floor(Math.random() * imgs.length);
 
@@ -163,7 +163,7 @@ const HelpIntentHandler = {
       && handlerInput.requestEnvelope.request.intent.name === 'AMAZON.HelpIntent';
   },
   handle(handlerInput) {
-    const speechText = toTextWithSSML(handlerInput, 'このスキルは、8月29日開催のアレクサハンズオンのスキルです。');
+    const speechText = toTextWithSSML(handlerInput, 'このスキルは、2月6日開催のアレクサハンズオンのスキルです。');
     return handlerInput.responseBuilder
       .speak(speechText)
       .reprompt(speechText)

@@ -60,7 +60,7 @@ const HelpIntentHandler = {
       && handlerInput.requestEnvelope.request.intent.name === 'AMAZON.HelpIntent';
   },
   handle(handlerInput) {
-    const speechText = toTextWithSSML(handlerInput, 'このスキルは、8月29日開催のアレクサハンズオンのスキルです。');
+    const speechText = toTextWithSSML(handlerInput, 'このスキルは、2月6日開催のアレクサハンズオンのスキルです。');
     return handlerInput.responseBuilder
       .speak(speechText)
       .reprompt(speechText)
