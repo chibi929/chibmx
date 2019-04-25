@@ -4,7 +4,7 @@ MODE = process.env.MODE || 'production';
 module.exports = [
   {
     mode: MODE,
-    entry: './src/main.ts',
+    entry: './src/app/main.ts',
     output: {
       path: `${__dirname}/dist`,
       filename: 'bundle.js'
