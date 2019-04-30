@@ -34,6 +34,13 @@ document.querySelector('.field.obniz-id .button').addEventListener('click', () =
     document.querySelector('.button.down').addEventListener('mouseup', () => ctrl.stop());
     document.querySelector('.button.down').addEventListener('touchend', () => ctrl.stop());
 
+    window.addEventListener(
+      'devicemotion',
+      evt => {
+        ctrl.deviceMotion(evt.accelerationIncludingGravity.x, evt.accelerationIncludingGravity.y);
+      },
+      true
+    );
     buttons.forEach(v => v.removeAttribute('disabled'));
   });
 });

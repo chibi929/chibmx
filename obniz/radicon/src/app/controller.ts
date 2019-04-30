@@ -1,4 +1,4 @@
-declare const Obniz: any;
+declare const OBNIZ: any;
 declare class Led {
   on(): void;
   off(): void;
@@ -22,6 +22,7 @@ export interface IController {
   left(): void;
   right(): void;
   stop(): void;
+  deviceMotion(x: number, y: number): void;
 }
 
 export class MockController implements IController {
@@ -60,35 +61,34 @@ export class MockController implements IController {
 }
 
 export class Controller implements IController {
-  private readonly obniz: any;
+  private readonly OBNIZ: any;
+  private readonly THRESHOLD = 1;
+  private readonly MAX_ACCEL = 5;
+
   private led: Led;
   private motorLeft: DCMotor;
   private motorRight: any;
 
   constructor(obnizId: string, connectedCallback?: () => void) {
-    this.obniz = new Obniz(obnizId);
+    this.OBNIZ = new OBNIZ(obnizId);
 
-    this.obniz.onconnect = async () => {
-      console.log('onconnect');
+    this.OBNIZ.onconnect = async () => {
       connectedCallback && connectedCallback();
-      this.led = this.obniz.wired('LED', { anode: 0, cathode: 1 });
-      this.motorLeft = this.obniz.wired('DCMotor', { forward: 2, back: 3 });
-      this.motorRight = this.obniz.wired('DCMotor', { forward: 4, back: 5 });
+      this.led = this.OBNIZ.wired('LED', { anode: 0, cathode: 1 });
+      this.motorLeft = this.OBNIZ.wired('DCMotor', { forward: 2, back: 3 });
+      this.motorRight = this.OBNIZ.wired('DCMotor', { forward: 4, back: 5 });
     };
   }
 
   on(): void {
-    console.log('on');
     this.led.on();
   }
 
   off(): void {
-    console.log('off');
     this.led.off();
   }
 
   up(): void {
-    console.log('up');
     this.motorLeft.power(60);
     this.motorRight.power(60);
     this.motorLeft.forward();
@@ -96,7 +96,6 @@ export class Controller implements IController {
   }
 
   left(): void {
-    console.log('left');
     this.motorLeft.power(20);
     this.motorRight.power(60);
     this.motorLeft.forward();
@@ -104,7 +103,6 @@ export class Controller implements IController {
   }
 
   right(): void {
-    console.log('right');
     this.motorLeft.power(60);
     this.motorRight.power(20);
     this.motorLeft.forward();
@@ -112,7 +110,6 @@ export class Controller implements IController {
   }
 
   down(): void {
-    console.log('down');
     this.motorLeft.power(60);
     this.motorRight.power(60);
     this.motorLeft.reverse();
@@ -120,8 +117,33 @@ export class Controller implements IController {
   }
 
   stop(): void {
-    console.log('stop');
     this.motorLeft.stop();
     this.motorRight.stop();
+  }
+
+  deviceMotion(x: number, y: number): void {
+    if (Math.abs(y) > this.THRESHOLD) {
+      let power = Math.min((100 * (Math.abs(y) - this.THRESHOLD)) / (this.MAX_ACCEL - this.THRESHOLD), 100);
+      this.motorLeft.power(power);
+      this.motorRight.power(power);
+
+      let direction = y > 0;
+      this.motorLeft.move(direction);
+      this.motorRight.move(direction);
+    } else if (Math.abs(x) > this.THRESHOLD) {
+      let power = Math.min((100 * (Math.abs(x) - this.THRESHOLD)) / (this.MAX_ACCEL - this.THRESHOLD), 100);
+      if (x > 0) {
+        this.motorRight.power(power);
+        this.motorRight.move(true);
+        this.motorLeft.stop();
+      } else {
+        this.motorLeft.power(power);
+        this.motorLeft.move(true);
+        this.motorRight.stop();
+      }
+    } else {
+      this.motorLeft.stop();
+      this.motorRight.stop();
+    }
   }
 }
