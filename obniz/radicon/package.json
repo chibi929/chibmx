@@ -8,6 +8,7 @@
   "private": true,
   "dependencies": {
     "bulma": "^0.7.4",
+    "bulma-extensions": "^6.2.5",
     "obniz": "^2.0.2"
   },
   "devDependencies": {
