@@ -14,7 +14,7 @@ declare class DCMotor {
   power(power: number): void;
 }
 
-interface IController {
+export interface IController {
   on(): void;
   off(): void;
   up(): void;

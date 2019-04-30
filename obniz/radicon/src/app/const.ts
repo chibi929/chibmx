@@ -1,3 +1,3 @@
 export class Const {
-  static readonly OBNIZ_ID: string = 'hogehoge';
+  static readonly STORAGE_KEY_OBNIZ_ID = 'OBNIZ_ID';
 }

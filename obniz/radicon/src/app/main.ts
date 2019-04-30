@@ -1,8 +1,16 @@
-import { Controller, MockController } from './controller';
+import { Const } from './const';
+import { IController, Controller, MockController } from './controller';
+
+const buttons = document.querySelectorAll('.obniz-controller .button');
+buttons.forEach(v => v.setAttribute('disabled', 'disabled'));
+
+const obnizIdElm = document.querySelector('.field.obniz-id .input') as HTMLInputElement;
+obnizIdElm.value = window.sessionStorage.getItem(Const.STORAGE_KEY_OBNIZ_ID) || '';
 
 document.querySelector('.field.obniz-id .button').addEventListener('click', () => {
-  const obnizIdElement = document.querySelector('.field.obniz-id .input') as HTMLInputElement;
-  const ctrl = new MockController(obnizIdElement.value, () => {
+  const ctrl = new Controller(obnizIdElm.value, () => {
+    window.sessionStorage.setItem(Const.STORAGE_KEY_OBNIZ_ID, obnizIdElm.value);
+
     document.querySelector('.button.led').addEventListener('mousedown', () => ctrl.on());
     document.querySelector('.button.led').addEventListener('touchstart', () => ctrl.on());
     document.querySelector('.button.led').addEventListener('mouseup', () => ctrl.off());
@@ -25,5 +33,7 @@ document.querySelector('.field.obniz-id .button').addEventListener('click', () =
     document.querySelector('.button.right').addEventListener('touchend', () => ctrl.stop());
     document.querySelector('.button.down').addEventListener('mouseup', () => ctrl.stop());
     document.querySelector('.button.down').addEventListener('touchend', () => ctrl.stop());
+
+    buttons.forEach(v => v.removeAttribute('disabled'));
   });
 });
