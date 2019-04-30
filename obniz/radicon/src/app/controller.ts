@@ -23,6 +23,7 @@ export interface IController {
   right(): void;
   stop(): void;
   deviceMotion(x: number, y: number): void;
+  useSensor(used: boolean): void;
 }
 
 export class MockController implements IController {
@@ -62,6 +63,10 @@ export class MockController implements IController {
   deviceMotion(x: number, y: number): void {
     console.log('deviceMotion');
   }
+
+  useSensor(used: boolean): void {
+    console.log(used);
+  }
 }
 
 export class Controller implements IController {
@@ -69,9 +74,10 @@ export class Controller implements IController {
   private readonly THRESHOLD = 1;
   private readonly MAX_ACCEL = 5;
 
+  private sensorUsed: boolean;
   private led: Led;
   private motorLeft: DCMotor;
-  private motorRight: any;
+  private motorRight: DCMotor;
 
   constructor(obnizId: string, connectedCallback?: () => void) {
     this.OBNIZ = new Obniz(obnizId);
@@ -126,8 +132,12 @@ export class Controller implements IController {
   }
 
   deviceMotion(x: number, y: number): void {
+    if (!this.sensorUsed) {
+      return;
+    }
+
     if (Math.abs(y) > this.THRESHOLD) {
-      let power = Math.min((100 * (Math.abs(y) - this.THRESHOLD)) / (this.MAX_ACCEL - this.THRESHOLD), 100);
+      let power = Math.min((100 * (Math.abs(y) - this.THRESHOLD)) / (this.MAX_ACCEL - this.THRESHOLD), 60);
       this.motorLeft.power(power);
       this.motorRight.power(power);
 
@@ -135,7 +145,7 @@ export class Controller implements IController {
       this.motorLeft.move(direction);
       this.motorRight.move(direction);
     } else if (Math.abs(x) > this.THRESHOLD) {
-      let power = Math.min((100 * (Math.abs(x) - this.THRESHOLD)) / (this.MAX_ACCEL - this.THRESHOLD), 100);
+      let power = Math.min((100 * (Math.abs(x) - this.THRESHOLD)) / (this.MAX_ACCEL - this.THRESHOLD), 60);
       if (x > 0) {
         this.motorRight.power(power);
         this.motorRight.move(true);
@@ -149,5 +159,9 @@ export class Controller implements IController {
       this.motorLeft.stop();
       this.motorRight.stop();
     }
+  }
+
+  useSensor(used: boolean): void {
+    this.sensorUsed = used;
   }
 }

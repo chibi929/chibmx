@@ -7,6 +7,8 @@ buttons.forEach(v => v.setAttribute('disabled', 'disabled'));
 const obnizIdElm = document.querySelector('.field.obniz-id .input') as HTMLInputElement;
 obnizIdElm.value = window.sessionStorage.getItem(Const.STORAGE_KEY_OBNIZ_ID) || '';
 
+const sensorElm = document.querySelector('.is-checkradio.sensor') as HTMLInputElement;
+
 document.querySelector('.field.obniz-id .button').addEventListener('click', () => {
   const ctrl = new Controller(obnizIdElm.value, () => {
     window.sessionStorage.setItem(Const.STORAGE_KEY_OBNIZ_ID, obnizIdElm.value);
@@ -34,13 +36,10 @@ document.querySelector('.field.obniz-id .button').addEventListener('click', () =
     document.querySelector('.button.down').addEventListener('mouseup', () => ctrl.stop());
     document.querySelector('.button.down').addEventListener('touchend', () => ctrl.stop());
 
-    window.addEventListener(
-      'devicemotion',
-      evt => {
-        ctrl.deviceMotion(evt.accelerationIncludingGravity.x, evt.accelerationIncludingGravity.y);
-      },
-      true
-    );
+    document.querySelector('.is-checkradio.sensor').addEventListener('click', () => ctrl.useSensor(sensorElm.checked));
+    window.addEventListener('devicemotion', evt => {
+      ctrl.deviceMotion(evt.accelerationIncludingGravity.x, evt.accelerationIncludingGravity.y);
+    });
     buttons.forEach(v => v.removeAttribute('disabled'));
   });
 });
