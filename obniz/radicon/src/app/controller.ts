@@ -1,4 +1,4 @@
-declare const OBNIZ: any;
+declare const Obniz: any;
 declare class Led {
   on(): void;
   off(): void;
@@ -58,6 +58,10 @@ export class MockController implements IController {
   stop(): void {
     console.log('stop');
   }
+
+  deviceMotion(x: number, y: number): void {
+    console.log('deviceMotion');
+  }
 }
 
 export class Controller implements IController {
@@ -70,7 +74,7 @@ export class Controller implements IController {
   private motorRight: any;
 
   constructor(obnizId: string, connectedCallback?: () => void) {
-    this.OBNIZ = new OBNIZ(obnizId);
+    this.OBNIZ = new Obniz(obnizId);
 
     this.OBNIZ.onconnect = async () => {
       connectedCallback && connectedCallback();
