@@ -78,9 +78,9 @@ export class Controller implements IController {
 
     this.OBNIZ.onconnect = async () => {
       connectedCallback && connectedCallback();
-      this.led = this.OBNIZ.wired('LED', { anode: 0, cathode: 1 });
-      this.motorLeft = this.OBNIZ.wired('DCMotor', { forward: 2, back: 3 });
-      this.motorRight = this.OBNIZ.wired('DCMotor', { forward: 4, back: 5 });
+      this.led = this.OBNIZ.wired('LED', { anode: 5, cathode: 6 });
+      this.motorLeft = this.OBNIZ.wired('DCMotor', { forward: 0, back: 1 });
+      this.motorRight = this.OBNIZ.wired('DCMotor', { forward: 10, back: 11 });
     };
   }
 
