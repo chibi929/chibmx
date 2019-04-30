@@ -3,9 +3,6 @@ import { Controller, MockController } from './controller';
 document.querySelector('.field.obniz-id .button').addEventListener('click', () => {
   const obnizIdElement = document.querySelector('.field.obniz-id .input') as HTMLInputElement;
   const ctrl = new MockController(obnizIdElement.value, () => {
-    window.addEventListener('mouseup', () => ctrl.stop());
-    window.addEventListener('touchstart', () => ctrl.stop());
-
     document.querySelector('.button.led').addEventListener('mousedown', () => ctrl.on());
     document.querySelector('.button.led').addEventListener('touchstart', () => ctrl.on());
     document.querySelector('.button.led').addEventListener('mouseup', () => ctrl.off());
