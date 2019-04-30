@@ -12,6 +12,7 @@ const sensorElm = document.querySelector('.is-checkradio.sensor') as HTMLInputEl
 document.querySelector('.field.obniz-id .button').addEventListener('click', () => {
   const ctrl = new Controller(obnizIdElm.value, () => {
     window.sessionStorage.setItem(Const.STORAGE_KEY_OBNIZ_ID, obnizIdElm.value);
+    ctrl.useSensor(sensorElm.checked);
 
     document.querySelector('.button.led').addEventListener('mousedown', () => ctrl.on());
     document.querySelector('.button.led').addEventListener('touchstart', () => ctrl.on());

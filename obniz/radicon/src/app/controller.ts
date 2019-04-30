@@ -85,8 +85,8 @@ export class Controller implements IController {
     this.OBNIZ.onconnect = async () => {
       connectedCallback && connectedCallback();
       this.led = this.OBNIZ.wired('LED', { anode: 5, cathode: 6 });
-      this.motorLeft = this.OBNIZ.wired('DCMotor', { forward: 0, back: 1 });
-      this.motorRight = this.OBNIZ.wired('DCMotor', { forward: 10, back: 11 });
+      this.motorRight = this.OBNIZ.wired('DCMotor', { forward: 0, back: 1 });
+      this.motorLeft = this.OBNIZ.wired('DCMotor', { forward: 10, back: 11 });
     };
   }
 
@@ -106,17 +106,15 @@ export class Controller implements IController {
   }
 
   left(): void {
-    this.motorLeft.power(20);
     this.motorRight.power(60);
-    this.motorLeft.forward();
     this.motorRight.forward();
+    this.motorLeft.stop();
   }
 
   right(): void {
     this.motorLeft.power(60);
-    this.motorRight.power(20);
     this.motorLeft.forward();
-    this.motorRight.forward();
+    this.motorRight.stop();
   }
 
   down(): void {
@@ -147,13 +145,13 @@ export class Controller implements IController {
     } else if (Math.abs(x) > this.THRESHOLD) {
       let power = Math.min((100 * (Math.abs(x) - this.THRESHOLD)) / (this.MAX_ACCEL - this.THRESHOLD), 60);
       if (x > 0) {
-        this.motorRight.power(power);
-        this.motorRight.move(true);
-        this.motorLeft.stop();
-      } else {
         this.motorLeft.power(power);
         this.motorLeft.move(true);
         this.motorRight.stop();
+      } else {
+        this.motorRight.power(power);
+        this.motorRight.move(true);
+        this.motorLeft.stop();
       }
     } else {
       this.motorLeft.stop();
