@@ -1,18 +1,4 @@
-declare const Obniz: any;
-declare class Led {
-  on(): void;
-  off(): void;
-  output(on: boolean): void;
-  blink(intervalMS: number): void;
-  endBlink(): void;
-}
-declare class DCMotor {
-  forward(): void;
-  reverse(): void;
-  stop(): void;
-  move(forward: boolean): void;
-  power(power: number): void;
-}
+/// <reference path="./@types/obniz/index.d.ts" />
 
 export interface IController {
   on(): void;
@@ -70,7 +56,7 @@ export class MockController implements IController {
 }
 
 export class Controller implements IController {
-  private readonly OBNIZ: any;
+  private readonly OBNIZ: Obniz;
   private readonly THRESHOLD = 1;
   private readonly MAX_ACCEL = 5;
 
