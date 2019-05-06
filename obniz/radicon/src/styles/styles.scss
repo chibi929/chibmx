@@ -1,0 +1,13 @@
+@import '../../node_modules/bulma/bulma';
+@import '../../node_modules/bulma-extensions/dist/css/bulma-extensions.min.css';
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.button[disabled] {
+  background-color: #ccc !important;
+}
