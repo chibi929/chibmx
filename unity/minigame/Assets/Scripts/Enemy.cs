@@ -3,9 +3,14 @@
 /// 敵
 public class Enemy : Token
 {
+    public static int Count = 0;
+
     /// 開始
     void Start()
     {
+        // 生存数を増やす
+        Count++;
+
         // サイズを設定
         SetSize(SpriteWidth / 2, SpriteHeight / 2);
 
@@ -44,6 +49,15 @@ public class Enemy : Token
     /// クリックされた
     void OnMouseDown()
     {
+        // 生存数を減らす
+        Count--;
+
+        // パーティクルを生成
+        for (int i = 0; i < 32; i++)
+        {
+            Particle.Add(X, Y);
+        }
+
         // 破棄する
         DestroyObj();
     }
