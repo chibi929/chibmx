@@ -61,7 +61,7 @@ export class Controller implements IController {
   private readonly MAX_ACCEL = 5;
 
   private sensorUsed: boolean;
-  private led: Led;
+  private led: LED;
   private motorLeft: DCMotor;
   private motorRight: DCMotor;
 
