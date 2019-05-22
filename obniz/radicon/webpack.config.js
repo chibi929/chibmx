@@ -22,6 +22,10 @@ module.exports = [
     // import 文で .ts ファイルを解決するため
     resolve: {
       extensions: ['.ts']
+    },
+    // 外部のモジュールを使うようにする
+    externals: {
+      'obniz/obniz.js': 'Obniz'
     }
   },
   {

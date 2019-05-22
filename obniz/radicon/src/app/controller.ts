@@ -1,4 +1,6 @@
-/// <reference path="./@types/obniz/index.d.ts" />
+import * as Obniz from 'obniz/obniz.js';
+import { LED } from 'obniz/parts/Light/LED';
+import { DCMotor } from 'obniz/parts/Moving/DCMotor';
 
 export interface IController {
   on(): void;

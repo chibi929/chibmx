@@ -8,7 +8,8 @@
   "private": true,
   "dependencies": {
     "bulma": "^0.7.4",
-    "bulma-extensions": "^6.2.5"
+    "bulma-extensions": "^6.2.5",
+    "obniz": "git+https://github.com/chibi929/obniz.git"
   },
   "devDependencies": {
     "@types/node": "^11.13.7",
