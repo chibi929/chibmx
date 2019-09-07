@@ -1,0 +1,11 @@
+{
+  "name": "google-apps-scripts-sample",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/google-apps-script": "^0.0.59",
+    "tslint": "^5.19.0",
+    "typescript": "^3.6.2"
+  }
+}
