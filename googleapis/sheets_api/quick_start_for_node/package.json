@@ -8,6 +8,11 @@
   },
   "devDependencies": {
     "@types/node": "^12.7.11",
+    "tslib": "^1.10.0",
     "typescript": "^3.6.3"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js"
   }
 }
