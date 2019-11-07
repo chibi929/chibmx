@@ -30,6 +30,8 @@
         No other internal dependency
       </card>
     </div>
+
+    <h2>api response result : {{ response }}</h2>
   </section>
 </template>
 
@@ -41,6 +43,21 @@ export default {
 
   components: {
     Card
+  },
+  data() {
+    return {
+      response: null
+    }
+  },
+  mounted() {
+    this.$axios
+      .$get('/api/test')
+      .then((response) => {
+        this.response = response.test
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }
 }
 </script>

@@ -7,7 +7,11 @@ const app = express()
 const config = require('../nuxt.config.js')
 config.dev = process.env.NODE_ENV !== 'production'
 
+const apiRouter = require('./api')
+
 async function start() {
+  app.use('/api', apiRouter)
+
   // Init Nuxt.js
   const nuxt = new Nuxt(config)
 
