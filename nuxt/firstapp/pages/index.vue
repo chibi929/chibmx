@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import Card from '~/components/Card'
+import Card from '~/components/Card';
 
 export default {
   name: 'HomePage',
@@ -47,17 +47,17 @@ export default {
   data() {
     return {
       response: null
-    }
+    };
   },
   mounted() {
     this.$axios
       .$get('/api/test')
       .then((response) => {
-        this.response = response.test
+        this.response = response.test;
       })
       .catch((error) => {
-        console.log(error)
-      })
+        console.log(error);
+      });
   }
-}
+};
 </script>

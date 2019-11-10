@@ -35,6 +35,8 @@ module.exports = {
       "html": {
         "void": "always"
       }
-    }]
+    }],
+    // https://eslint.org/docs/rules/semi
+    "semi": ["error", "always"]
   }
 }
