@@ -29,6 +29,8 @@
       <card title="Lightweight" icon="arrange-bring-to-front">
         No other internal dependency
       </card>
+
+      <Hello />
     </div>
 
     <h2>api response result : {{ response }}</h2>
@@ -37,12 +39,14 @@
 
 <script>
 import Card from '~/components/Card';
+import Hello from '~/components/Hello';
 
 export default {
   name: 'HomePage',
 
   components: {
-    Card
+    Card,
+    Hello
   },
   data() {
     return {
