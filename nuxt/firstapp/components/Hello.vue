@@ -1,25 +1,19 @@
 <template>
   <div>
     {{ fullName }}
+    {{ message }}
   </div>
 </template>
 
 <script lang="ts">
-import Vue, { PropOptions } from 'vue';
+import { Vue, Component } from 'vue-property-decorator';
 
-export default Vue.extend({
-  name: 'Hello',
+@Component
+export default class Hello extends Vue {
+  message: string = 'This is a message from class component.';
 
-  data() {
-    return {
-      message: 'This is a message'
-    };
-  },
-
-  computed: {
-    fullName(): string {
-      return `Chibi Kinoko`;
-    }
+  get fullName(): string {
+    return `Chibi Kinoko`;
   }
-});
+}
 </script>
