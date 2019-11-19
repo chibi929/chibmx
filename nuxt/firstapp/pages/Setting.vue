@@ -36,6 +36,19 @@ export default class Setting extends Vue {
   private created() {
     this.$store.dispatch('loadToken');
     this.token = this.$store.state.token;
+
+    this.$axios
+      .$get('https://api.github.com/user/repos', {
+        headers: {
+          Authorization: `token ${this.token}`
+        }
+      })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   private save() {
