@@ -30,15 +30,18 @@ export default class Setting extends Vue {
   private token: string = '';
 
   get fullName(): string {
-    return `Chibi Kinoko ${this.token}`;
+    return `Chibi Kinoko`;
   }
 
   private created() {
-    this.token = localStorage.getItem('GITHUB_TOKEN') || '';
+    this.$store.dispatch('loadToken');
+    this.token = this.$store.state.token;
   }
 
   private save() {
-    localStorage.setItem('GITHUB_TOKEN', this.token);
+    this.$store.dispatch('setToken', this.token);
+    this.$store.dispatch('loadToken');
+    this.token = this.$store.state.token;
   }
 }
 </script>
