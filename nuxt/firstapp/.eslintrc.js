@@ -41,6 +41,7 @@ module.exports = {
       }
     ],
     // https://eslint.org/docs/rules/semi
-    semi: ['error', 'always']
+    semi: ['error', 'always'],
+    'arrow-parens': ['error', 'always']
   }
 };
