@@ -16,8 +16,16 @@ export class GitClient {
     });
   }
 
-  fetchRepository(): AxiosPromise<object> {
+  fetchOrganization(): AxiosPromise<Array<object>> {
+    return axios.get(`${this.baseUrl}/user/orgs?per_page=100`);
+  }
+
+  fetchRepository(): AxiosPromise<Array<object>> {
     return axios.get(`${this.baseUrl}/user/repos?per_page=100`);
+  }
+
+  fetchOrganizationRepository(org: string): AxiosPromise<Array<object>> {
+    return axios.get(`${this.baseUrl}/orgs/${org}/repos?per_page=100`);
   }
 
   createRepositoryProject(owner: string, repo: string, projectName: string): AxiosPromise<object> {

@@ -41,9 +41,14 @@ export default {
     return {
       items: [
         {
-          title: 'Home',
+          title: 'Root',
           icon: 'home',
           to: { name: 'index' }
+        },
+        {
+          title: 'Home',
+          icon: 'home',
+          to: { name: 'Home' }
         },
         {
           title: 'Setting',
