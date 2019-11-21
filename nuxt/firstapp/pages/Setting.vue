@@ -40,16 +40,6 @@ export default class Setting extends Vue {
   private created() {
     this.$store.dispatch('loadToken');
     this.token = this.$store.state.token;
-
-    const cli = new GitClient(this.token);
-    cli
-      .fetchRepository()
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
   }
 
   private save() {
