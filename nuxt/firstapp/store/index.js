@@ -43,10 +43,6 @@ export const actions = {
       });
   },
   updateOrganizationRepositories(context, org) {
-    if (context.state.repos && context.state.repos.length !== 0) {
-      return;
-    }
-
     const cli = new GitClient(context.state.token);
     return cli
       .fetchOrganizationRepository(org)
