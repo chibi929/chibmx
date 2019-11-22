@@ -42,10 +42,10 @@ export const actions = {
         console.log(error);
       });
   },
-  updateOrganizationRepositories(context, org) {
+  updateRepositories(context, org) {
     const cli = new GitClient(context.state.token);
-    return cli
-      .fetchOrganizationRepository(org)
+    const promise = org != null ? cli.fetchOrganizationRepository(org) : cli.fetchRepository();
+    return promise
       .then((response) => {
         const repos = response.data.map((obj) => obj.name).sort();
         context.commit('setRepos', repos);

@@ -16,13 +16,13 @@
       </b-select>
     </b-field>
 
-    <p>Debug(orgs): {{ orgs }}</p>
-    <p>Debug(repos): {{ repos }}</p>
-    <p>Debug(selectedRepo): {{ selectedRepo }}</p>
-
     <b-button type="is-primary" @click="clickOK">
       OK
     </b-button>
+
+    <p>Debug(orgs): {{ orgs }}</p>
+    <p>Debug(repos): {{ repos }}</p>
+    <p>Debug(selectedRepo): {{ selectedRepo }}</p>
   </section>
 </template>
 
@@ -42,16 +42,20 @@ export default class Setting extends Vue {
     this.$store.dispatch('loadToken');
     await this.$store.dispatch('updateOrganizations');
     this.orgs = this.$store.state.orgs;
+    if (!this.orgs || !this.orgs.length) {
+      await this.$store.dispatch('updateRepositories', null);
+      this.repos = this.$store.state.repos;
+      this.selectedRepo = this.repos[0];
+    }
   }
 
   private async changeOrganization(selectedOption: string): Promise<void> {
-    await this.$store.dispatch('updateOrganizationRepositories', selectedOption);
+    await this.$store.dispatch('updateRepositories', selectedOption);
     this.repos = this.$store.state.repos;
     this.selectedRepo = this.repos[0];
   }
 
   private clickOK() {
-    console.log(this.selectedRepo);
     this.$buefy.dialog.confirm({
       message: `Your selected is ${this.selectedRepo}?`,
       onConfirm: () => this.$buefy.toast.open('User confirmed')
