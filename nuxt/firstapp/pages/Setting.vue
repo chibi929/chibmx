@@ -43,9 +43,15 @@ export default class Setting extends Vue {
   }
 
   private save() {
-    this.$store.dispatch('setToken', this.token);
-    this.$store.dispatch('loadToken');
-    this.token = this.$store.state.token;
+    this.$buefy.dialog.confirm({
+      message: `ブラウザにトークンを保存します`,
+      onConfirm: () => {
+        this.$store.dispatch('setToken', this.token);
+        this.$store.dispatch('loadToken');
+        this.token = this.$store.state.token;
+        this.$buefy.toast.open('保存しました');
+      }
+    });
   }
 
   private test() {
