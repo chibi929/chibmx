@@ -19,19 +19,20 @@
     <div class="columns">
       <div class="column is-2">
         <b-field label="Create counts">
-          <b-numberinput v-model="createCounts" />
+          <b-numberinput v-model="createCounts" min="1" />
         </b-field>
       </div>
       <div class="column is-2">
         <b-field label="Initial counts">
-          <b-numberinput v-model="initialCounts" />
+          <b-numberinput v-model="initialCounts" min="1" />
         </b-field>
       </div>
     </div>
 
     <b-field label="Select a date">
-      <b-datepicker placeholder="Click to select..." v-model="selectedDates" range />
+      <b-datepicker @input="changeDates" placeholder="Click to select..." v-model="selectedDates" range />
     </b-field>
+
     <template v-for="(_, i) in selectedDatesArray">
       <b-field label="Select a date" :key="i">
         <b-datepicker placeholder="Click to select..." v-model="selectedDatesArray[i]" range />
@@ -62,8 +63,8 @@ export default class Setting extends Vue {
 
   /** v-model */
   private selectedRepo: string | null = null;
-  private initialCounts: number = 0;
-  private createCounts: number = 0;
+  private initialCounts: number = 1;
+  private createCounts: number = 1;
   private selectedDates: Date[] | null = null;
   private selectedDatesArray: any[][] = [];
 
@@ -84,14 +85,20 @@ export default class Setting extends Vue {
     this.selectedRepo = this.repos[0];
   }
 
+  private changeDates(dates: Date[]): void {
+    this.selectedDatesArray.length = 0;
+    const startDate = moment(dates[0]);
+    const endDate = moment(dates[1]);
+    const diff = endDate.diff(startDate, 'days') + 1;
+
+    for (let i = 0; i < this.createCounts; i++) {
+      startDate.add(diff, 'days');
+      endDate.add(diff, 'days');
+      this.selectedDatesArray.push([startDate.toDate(), endDate.toDate()]);
+    }
+  }
+
   private clickOK() {
-    this.selectedDatesArray.push([new Date('2019/11/1'), new Date('2019/11/2')]);
-
-    const a = moment(new Date('2019/11/3'));
-    const b = moment(new Date('2019/11/4'));
-    a.add(7, 'days');
-    b.add(7, 'days');
-
     this.$buefy.dialog.confirm({
       message: `Your selected is ${this.selectedRepo}?`,
       onConfirm: () => this.$buefy.toast.open('User confirmed')
