@@ -16,6 +16,19 @@
       </b-select>
     </b-field>
 
+    <div class="columns">
+      <div class="column is-2">
+        <b-field label="Create counts">
+          <b-numberinput v-model="createCounts" />
+        </b-field>
+      </div>
+      <div class="column is-2">
+        <b-field label="Initial counts">
+          <b-numberinput v-model="initialCounts" />
+        </b-field>
+      </div>
+    </div>
+
     <b-field label="Select a date">
       <b-datepicker placeholder="Click to select..." v-model="selectedDates" range />
     </b-field>
@@ -49,7 +62,9 @@ export default class Setting extends Vue {
 
   /** v-model */
   private selectedRepo: string | null = null;
-  private selectedDates: any[] | null = null;
+  private initialCounts: number = 0;
+  private createCounts: number = 0;
+  private selectedDates: Date[] | null = null;
   private selectedDatesArray: any[][] = [];
 
   private async created(): Promise<void> {
