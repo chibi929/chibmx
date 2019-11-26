@@ -16,6 +16,10 @@ export class GitClient {
     });
   }
 
+  fetchAuthUser(): AxiosPromise<object> {
+    return axios.get(`${this.baseUrl}/user`);
+  }
+
   fetchOrganization(): AxiosPromise<Array<object>> {
     return axios.get(`${this.baseUrl}/user/orgs?per_page=100`);
   }

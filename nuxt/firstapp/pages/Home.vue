@@ -58,6 +58,7 @@ import { GitClient } from './git-client';
 
 @Component
 export default class Setting extends Vue {
+  private user: string = '';
   private orgs: string[] = [];
   private repos: string[] = [];
 
@@ -71,13 +72,10 @@ export default class Setting extends Vue {
 
   private async created(): Promise<void> {
     this.$store.dispatch('loadToken');
+    await this.$store.dispatch('updateUser');
+    this.user = this.$store.state.user;
     await this.$store.dispatch('updateOrganizations');
-    this.orgs = this.$store.state.orgs;
-    if (!this.orgs || !this.orgs.length) {
-      await this.$store.dispatch('updateRepositories', null);
-      this.repos = this.$store.state.repos;
-      this.selectedRepo = this.repos[0];
-    }
+    this.orgs = [this.user].concat(this.$store.state.orgs);
   }
 
   private async changeOrganization(selectedOption: string): Promise<void> {

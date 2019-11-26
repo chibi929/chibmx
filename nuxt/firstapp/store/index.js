@@ -2,6 +2,7 @@ import { GitClient } from '~/pages/git-client';
 
 export const state = () => ({
   token: '',
+  user: '',
   orgs: [],
   repos: [],
   columnTitles: ['To do', 'In progress', 'Resolved', 'Done']
@@ -10,6 +11,10 @@ export const state = () => ({
 export const mutations = {
   setToken(state, token) {
     state.token = token;
+    state.user = '';
+  },
+  setUser(state, userName) {
+    state.user = userName;
   },
   setOrgs(state, orgs) {
     state.orgs = orgs;
@@ -26,6 +31,23 @@ export const actions = {
   loadToken(context) {
     const token = localStorage.getItem('GITHUB_TOKEN') || '';
     context.commit('setToken', token);
+  },
+  updateUser(context) {
+    if (context.state.user) {
+      return;
+    }
+
+    const cli = new GitClient(context.state.token);
+    return cli
+      .fetchAuthUser()
+      .then((response) => {
+        const { data } = response;
+        console.log(data.login);
+        context.commit('setUser', data.login);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   },
   updateOrganizations(context) {
     if (context.state.orgs && context.state.orgs.length !== 0) {
