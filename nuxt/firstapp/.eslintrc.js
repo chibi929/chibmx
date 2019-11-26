@@ -30,7 +30,7 @@ module.exports = {
         ignoreRestSiblings: false
       }
     ],
-    'space-before-function-paren': ['error', 'never'],
+    'space-before-function-paren': ['error', {'anonymous': 'never', 'named': 'never', 'asyncArrow': 'always'}],
     // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/html-self-closing.md
     'vue/html-self-closing': [
       'error',
