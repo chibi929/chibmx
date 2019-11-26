@@ -60,7 +60,7 @@ import moment from 'moment';
 import { GitClient } from './git-client';
 
 @Component
-export default class Setting extends Vue {
+export default class Main extends Vue {
   private user: string = '';
   private orgs: string[] = [];
   private repos: string[] = [];
@@ -73,7 +73,7 @@ export default class Setting extends Vue {
   private selectedDates: Date[] | null = null;
   private selectedDatesArray: any[][] = [];
 
-  private async beforeCreate(): Promise<void> {
+  private async created(): Promise<void> {
     this.$store.dispatch('loadLocalStorage');
     const token = this.$store.state.token;
     if (!token) {
@@ -87,13 +87,6 @@ export default class Setting extends Vue {
     if (!user) {
       this.$router.push('Setting');
       this.$buefy.toast.open({ message: `GitHub ユーザーが取得できませんでした`, position: 'is-bottom', type: 'is-danger' });
-    }
-  }
-
-  private async created(): Promise<void> {
-    const { token, user } = this.$store.state;
-    if (!token || !user) {
-      return;
     }
 
     this.user = user;

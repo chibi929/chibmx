@@ -1,7 +1,7 @@
 {
-  "name": "firstapp",
+  "name": "Gpgen",
   "version": "1.0.0",
-  "description": "My great Nuxt.js project",
+  "description": "GitHub project generator.",
   "author": "chibi929",
   "private": true,
   "scripts": {

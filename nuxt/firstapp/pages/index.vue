@@ -1,52 +1,43 @@
 <template>
   <section class="section">
     <div class="columns is-mobile">
-      <card title="Free" icon="github-circle">
-        Open source on
-        <a href="https://github.com/buefy/buefy">
-          GitHub
-        </a>
+      <card title="First Step" icon="github-circle">
+        Create <strong>Personal access tokens</strong> on
+        <span>
+          <a href="https://github.com/settings/tokens">
+            GitHub
+          </a>
+          .
+        </span>
+        <br />
+        The required scope is <strong>repo</strong> and <strong>user:read</strong>.
       </card>
 
-      <card title="Responsive" icon="cellphone-link">
-        <b class="has-text-grey">
-          Every
-        </b>
-        component is responsive
+      <card title="Second Step" icon="settings">
+        Save tokens to this app on <nuxt-link to="Setting">Setting</nuxt-link> page.
       </card>
 
-      <card title="Modern" icon="alert-decagram">
-        Built with
-        <a href="https://vuejs.org/">
-          Vue.js
-        </a>
-        and
-        <a href="http://bulma.io/">
-          Bulma
-        </a>
+      <card title="Third Step" icon="rocket">
+        <nuxt-link to="Main">Create GitHub project!</nuxt-link>
       </card>
-
-      <card title="Lightweight" icon="arrange-bring-to-front">
-        No other internal dependency
-      </card>
-
-      <Hello />
     </div>
-
-    <h2>api response result : {{ response }}</h2>
+    <div class="columns is-mobile">
+      <card title="Note" icon="alert">
+        <strong>Manage automation</strong>
+        settings is manually.
+      </card>
+    </div>
   </section>
 </template>
 
 <script>
 import Card from '~/components/Card';
-import Hello from '~/components/Hello';
 
 export default {
   name: 'HomePage',
 
   components: {
-    Card,
-    Hello
+    Card
   },
   data() {
     return {
