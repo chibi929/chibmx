@@ -3,7 +3,8 @@ import { GitClient } from '~/pages/git-client';
 export const state = () => ({
   token: '',
   orgs: [],
-  repos: []
+  repos: [],
+  columnTitles: ['To do', 'In progress', 'Resolved', 'Done']
 });
 
 export const mutations = {

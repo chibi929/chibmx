@@ -1,7 +1,7 @@
 <template>
   <section class="section">
     <b-field label="Organization">
-      <b-select @input="changeOrganization" placeholder="Select a name">
+      <b-select v-model="selectedOrg" @input="changeOrganization" placeholder="Select a name">
         <option v-for="(option, i) in orgs" :value="option" :key="i">
           {{ option }}
         </option>
@@ -17,12 +17,12 @@
     </b-field>
 
     <div class="columns">
-      <div class="column is-2">
+      <div class="column is-3">
         <b-field label="Create counts">
           <b-numberinput v-model="createCounts" min="1" />
         </b-field>
       </div>
-      <div class="column is-2">
+      <div class="column is-3">
         <b-field label="Initial counts">
           <b-numberinput v-model="initialCounts" min="1" />
         </b-field>
@@ -30,12 +30,12 @@
     </div>
 
     <b-field label="Select a date">
-      <b-datepicker @input="changeDates" placeholder="Click to select..." v-model="selectedDates" range />
+      <b-datepicker v-model="selectedDates" @input="changeDates" placeholder="Click to select..." range />
     </b-field>
 
     <template v-for="(_, i) in selectedDatesArray">
-      <b-field label="Select a date" :key="i">
-        <b-datepicker placeholder="Click to select..." v-model="selectedDatesArray[i]" range />
+      <b-field :key="i" label="Select a date">
+        <b-datepicker v-model="selectedDatesArray[i]" placeholder="Click to select..." range />
       </b-field>
     </template>
 
@@ -62,6 +62,7 @@ export default class Setting extends Vue {
   private repos: string[] = [];
 
   /** v-model */
+  private selectedOrg: string | null = null;
   private selectedRepo: string | null = null;
   private initialCounts: number = 1;
   private createCounts: number = 1;
@@ -91,7 +92,7 @@ export default class Setting extends Vue {
     const endDate = moment(dates[1]);
     const diff = endDate.diff(startDate, 'days') + 1;
 
-    for (let i = 0; i < this.createCounts; i++) {
+    for (let i = 0; i < this.createCounts - 1; i++) {
       startDate.add(diff, 'days');
       endDate.add(diff, 'days');
       this.selectedDatesArray.push([startDate.toDate(), endDate.toDate()]);
@@ -99,9 +100,65 @@ export default class Setting extends Vue {
   }
 
   private clickOK() {
+    const datesArray = [this.selectedDates as Date[]].concat(this.selectedDatesArray);
+    if (
+      this.selectedOrg == null ||
+      this.selectedRepo == null ||
+      this.selectedDates == null ||
+      this.createCounts !== datesArray.length
+    ) {
+      this.$buefy.toast.open({
+        message: `必要なパラメータが揃っていません`,
+        position: 'is-bottom',
+        type: 'is-danger'
+      });
+      return;
+    }
+
+    const projectTitles = datesArray.map((dates, idx) => {
+      const startDate = moment(dates[0]);
+      const endDate = moment(dates[1]);
+      return `sp${this.initialCounts + idx}(${startDate.format('YYYY.MM.DD')}-${endDate.format('YYYY.MM.DD')})`;
+    });
+
     this.$buefy.dialog.confirm({
-      message: `Your selected is ${this.selectedRepo}?`,
-      onConfirm: () => this.$buefy.toast.open('User confirmed')
+      message: `${projectTitles.join('\r\n')}`,
+      onConfirm: () => {
+        projectTitles.forEach((projectTitle) => this.createProjectRelations(projectTitle));
+      }
+    });
+  }
+
+  private async createProjectRelations(projectTitle: string): Promise<void> {
+    const token = this.$store.state.token as string;
+    const cli = new GitClient(token);
+
+    const { data }: any = await cli
+      .createRepositoryProject(this.selectedOrg!, this.selectedRepo!, projectTitle)
+      .catch((_) => ({}));
+
+    if (!data) {
+      this.$buefy.toast.open({
+        message: `プロジェクト登録に失敗しました`,
+        position: 'is-bottom',
+        type: 'is-danger'
+      });
+    }
+
+    const columnTitles = this.$store.state.columnTitles as string[];
+    columnTitles.forEach((columnTitle) => {
+      cli
+        .createProjectColumn(data.id, columnTitle)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((_) => {
+          this.$buefy.toast.open({
+            message: `カラム登録に失敗しました`,
+            position: 'is-bottom',
+            type: 'is-danger'
+          });
+        });
     });
   }
 }
