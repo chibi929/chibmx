@@ -36,7 +36,7 @@ export class GitClient {
     return axios.post(`${this.baseUrl}/repos/${owner}/${repo}/projects`, body, { headers });
   }
 
-  createProjectCard(projectId: number, columnName: string): AxiosPromise<object> {
+  createProjectColumn(projectId: number, columnName: string): AxiosPromise<object> {
     const headers = {
       Accept: 'application/vnd.github.inertia-preview+json'
     };
