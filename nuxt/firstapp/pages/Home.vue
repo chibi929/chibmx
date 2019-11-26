@@ -74,7 +74,9 @@ export default class Setting extends Vue {
   private selectedDatesArray: any[][] = [];
 
   private async created(): Promise<void> {
-    this.$store.dispatch('loadToken');
+    this.$store.dispatch('loadLocalStorage');
+    this.createCounts = this.$store.state.createCounts;
+    this.initialCounts = this.$store.state.initialCounts;
     await this.$store.dispatch('updateUser');
     this.user = this.$store.state.user;
     await this.$store.dispatch('updateOrganizations');
@@ -119,6 +121,8 @@ export default class Setting extends Vue {
       });
       return;
     }
+    this.$store.dispatch('setCreateCounts', this.createCounts);
+    this.$store.dispatch('setInitialCounts', this.initialCounts);
 
     const datesArray = [this.selectedDates as Date[]].concat(this.selectedDatesArray);
     const projectTitles = datesArray.map((dates, idx) => {

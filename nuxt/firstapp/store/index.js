@@ -1,17 +1,27 @@
 import { GitClient } from '~/pages/git-client';
 
 export const state = () => ({
+  /** ローカルストレージ */
   token: '',
+  createCounts: 1,
+  initialCounts: 1,
+  /** GitHub データ */
   user: '',
   orgs: [],
   repos: [],
+  /** 定数(今のところ) */
   columnTitles: ['To do', 'In progress', 'Resolved', 'Done']
 });
 
 export const mutations = {
   setToken(state, token) {
     state.token = token;
-    state.user = '';
+  },
+  setCreateCounts(state, count) {
+    state.createCounts = count;
+  },
+  setInitialCounts(state, count) {
+    state.initialCounts = count;
   },
   setUser(state, userName) {
     state.user = userName;
@@ -27,10 +37,26 @@ export const mutations = {
 export const actions = {
   setToken(context, token) {
     localStorage.setItem('GITHUB_TOKEN', token);
+    context.commit('setToken', token);
+    context.commit('setUser', '');
   },
-  loadToken(context) {
+  setCreateCounts(context, count) {
+    localStorage.setItem('CREATE_COUNTS', count);
+    context.commit('setCreateCounts', count);
+  },
+  setInitialCounts(context, count) {
+    localStorage.setItem('INITIAL_COUNTS', count);
+    context.commit('setInitialCounts', count);
+  },
+  loadLocalStorage(context) {
     const token = localStorage.getItem('GITHUB_TOKEN') || '';
     context.commit('setToken', token);
+
+    const createCounts = localStorage.getItem('CREATE_COUNTS') || 1;
+    context.commit('setCreateCounts', Number(createCounts));
+
+    const initialCounts = localStorage.getItem('INITIAL_COUNTS') || 1;
+    context.commit('setInitialCounts', Number(initialCounts));
   },
   updateUser(context) {
     if (context.state.user) {

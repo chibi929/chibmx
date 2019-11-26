@@ -35,7 +35,7 @@ export default class Setting extends Vue {
   }
 
   private created() {
-    this.$store.dispatch('loadToken');
+    this.$store.dispatch('loadLocalStorage');
     this.token = this.$store.state.token;
   }
 
@@ -44,8 +44,6 @@ export default class Setting extends Vue {
       message: `ブラウザにトークンを保存します`,
       onConfirm: () => {
         this.$store.dispatch('setToken', this.token);
-        this.$store.dispatch('loadToken');
-        this.token = this.$store.state.token;
         this.$buefy.toast.open('保存しました');
       }
     });
