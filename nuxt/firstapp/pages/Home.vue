@@ -39,13 +39,16 @@
       </b-field>
     </template>
 
-    <b-button type="is-primary" @click="clickOK">
+    <b-button type="is-primary" @click="clickOK" :disabled="requestButtonDisabled">
       OK
     </b-button>
 
     <p>Debug(orgs): {{ orgs }}</p>
     <p>Debug(repos): {{ repos }}</p>
+    <p>Debug(selectedOrg): {{ selectedOrg }}</p>
     <p>Debug(selectedRepo): {{ selectedRepo }}</p>
+    <p>Debug(createCounts): {{ createCounts }}</p>
+    <p>Debug(initialCounts): {{ initialCounts }}</p>
     <p>Debug(selectedDates): {{ selectedDates }}</p>
     <p>Debug(selectedDatesArray): {{ selectedDatesArray }}</p>
   </section>
@@ -65,8 +68,8 @@ export default class Setting extends Vue {
   /** v-model */
   private selectedOrg: string | null = null;
   private selectedRepo: string | null = null;
-  private initialCounts: number = 1;
   private createCounts: number = 1;
+  private initialCounts: number = 1;
   private selectedDates: Date[] | null = null;
   private selectedDatesArray: any[][] = [];
 
@@ -76,6 +79,16 @@ export default class Setting extends Vue {
     this.user = this.$store.state.user;
     await this.$store.dispatch('updateOrganizations');
     this.orgs = [this.user].concat(this.$store.state.orgs);
+  }
+
+  private get requestButtonDisabled(): boolean {
+    const datesArray = [this.selectedDates as Date[]].concat(this.selectedDatesArray);
+    return (
+      this.selectedOrg == null ||
+      this.selectedRepo == null ||
+      this.selectedDates == null ||
+      this.createCounts !== datesArray.length
+    );
   }
 
   private async changeOrganization(selectedOption: string): Promise<void> {
@@ -98,13 +111,7 @@ export default class Setting extends Vue {
   }
 
   private clickOK() {
-    const datesArray = [this.selectedDates as Date[]].concat(this.selectedDatesArray);
-    if (
-      this.selectedOrg == null ||
-      this.selectedRepo == null ||
-      this.selectedDates == null ||
-      this.createCounts !== datesArray.length
-    ) {
+    if (this.requestButtonDisabled) {
       this.$buefy.toast.open({
         message: `必要なパラメータが揃っていません`,
         position: 'is-bottom',
@@ -113,6 +120,7 @@ export default class Setting extends Vue {
       return;
     }
 
+    const datesArray = [this.selectedDates as Date[]].concat(this.selectedDatesArray);
     const projectTitles = datesArray.map((dates, idx) => {
       const startDate = moment(dates[0]);
       const endDate = moment(dates[1]);
