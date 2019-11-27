@@ -94,7 +94,8 @@ export default class Setting extends Vue {
   }
 
   private async changeOrganization(selectedOption: string): Promise<void> {
-    await this.$store.dispatch('updateRepositories', selectedOption);
+    const reqOrg = selectedOption === this.user ? null : selectedOption;
+    await this.$store.dispatch('updateRepositories', reqOrg);
     this.repos = this.$store.state.repos;
     this.selectedRepo = this.repos[0];
   }
