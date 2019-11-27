@@ -68,7 +68,6 @@ export const actions = {
       .fetchAuthUser()
       .then((response) => {
         const { data } = response;
-        console.log(data.login);
         context.commit('setUser', data.login);
       })
       .catch((error) => {
