@@ -10,15 +10,21 @@
           .
         </span>
         <br />
-        The required scope is <strong>repo</strong> and <strong>user:read</strong>.
+        The required scope is <strong>repo</strong>.
       </card>
 
       <card title="Second Step" icon="settings">
-        Save tokens to this app on <nuxt-link to="Setting">Setting</nuxt-link> page.
+        Save tokens to this app on
+        <nuxt-link to="Setting">
+          Setting
+        </nuxt-link>
+        page.
       </card>
 
       <card title="Third Step" icon="rocket">
-        <nuxt-link to="Main">Create GitHub project!</nuxt-link>
+        <nuxt-link to="Main">
+          Create GitHub project!
+        </nuxt-link>
       </card>
     </div>
     <div class="columns is-mobile">

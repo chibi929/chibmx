@@ -1,8 +1,8 @@
 <template>
   <section class="section">
     <b-field label="Organization">
-      <b-select v-model="selectedOrg" @input="changeOrganization" placeholder="Select a name">
-        <option v-for="(option, i) in orgs" :value="option" :key="i">
+      <b-select v-model="selectedOrg" placeholder="Select a name" @input="changeOrganization">
+        <option v-for="(option, i) in orgs" :key="i" :value="option">
           {{ option }}
         </option>
       </b-select>
@@ -10,7 +10,7 @@
 
     <b-field label="Repository">
       <b-select v-model="selectedRepo" placeholder="Select a name">
-        <option v-for="(option, i) in repos" :value="option" :key="i">
+        <option v-for="(option, i) in repos" :key="i" :value="option">
           {{ option }}
         </option>
       </b-select>
@@ -30,7 +30,7 @@
     </div>
 
     <b-field label="Select a date">
-      <b-datepicker v-model="selectedDates" @input="changeDates" placeholder="Click to select..." range />
+      <b-datepicker v-model="selectedDates" placeholder="Click to select..." range @input="changeDates" />
     </b-field>
 
     <template v-for="(_, i) in selectedDatesArray">
@@ -39,7 +39,7 @@
       </b-field>
     </template>
 
-    <b-button type="is-primary" @click="clickOK" :disabled="requestButtonDisabled">
+    <b-button type="is-primary" :disabled="requestButtonDisabled" @click="clickOK">
       OK
     </b-button>
 
@@ -147,43 +147,47 @@ export default class Main extends Vue {
 
     this.$buefy.dialog.confirm({
       message: `${projectTitles.join('\r\n')}`,
-      onConfirm: () => {
-        projectTitles.forEach((projectTitle) => this.createProjectRelations(projectTitle));
-      }
+      onConfirm: this.callbackOnConfirm(projectTitles)
     });
+  }
+
+  private callbackOnConfirm(projectTitles: string[]): () => void {
+    return () => {
+      projectTitles.reduce<any>((acc: Promise<void>, cur: string) => {
+        return acc.then(() => {
+          return this.createProjectRelations(cur)
+            .then(() => {
+              this.$buefy.toast.open(`${cur} を作成しました`);
+            })
+            .catch(() => {
+              this.$buefy.toast.open({
+                message: `プロジェクト登録に失敗しました`,
+                position: 'is-bottom',
+                type: 'is-danger'
+              });
+            });
+        });
+      }, Promise.resolve());
+    };
   }
 
   private async createProjectRelations(projectTitle: string): Promise<void> {
     const token = this.$store.state.token as string;
     const cli = new GitClient(token);
 
-    const { data }: any = await cli
-      .createRepositoryProject(this.selectedOrg!, this.selectedRepo!, projectTitle)
-      .catch((_) => ({}));
-
-    if (!data) {
-      this.$buefy.toast.open({
-        message: `プロジェクト登録に失敗しました`,
-        position: 'is-bottom',
-        type: 'is-danger'
-      });
-    }
-
+    const { data }: any = await cli.createRepositoryProject(this.selectedOrg!, this.selectedRepo!, projectTitle);
     const columnTitles = this.$store.state.columnTitles as string[];
-    columnTitles.forEach((columnTitle) => {
-      cli
-        .createProjectColumn(data.id, columnTitle)
-        .then((response) => {
-          console.log(response);
-        })
-        .catch((_) => {
+    columnTitles.reduce<any>((acc: Promise<void>, cur: string) => {
+      return acc.then(() => {
+        return cli.createProjectColumn(data.id, cur).catch(() => {
           this.$buefy.toast.open({
             message: `カラム登録に失敗しました`,
             position: 'is-bottom',
             type: 'is-danger'
           });
         });
-    });
+      });
+    }, Promise.resolve());
   }
 }
 </script>
