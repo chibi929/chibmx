@@ -18,7 +18,8 @@
     "express": "^4.16.4",
     "moment": "^2.24.0",
     "nuxt": "^2.0.0",
-    "nuxt-buefy": "^0.3.2"
+    "nuxt-buefy": "^0.3.2",
+    "vue-property-decorator": "^8.3.0"
   },
   "devDependencies": {
     "@nuxt/typescript-build": "^0.3.4",
@@ -35,7 +36,6 @@
     "jest": "^24.1.0",
     "nodemon": "^1.18.9",
     "prettier": "^1.16.4",
-    "vue-jest": "^4.0.0-0",
-    "vue-property-decorator": "^8.3.0"
+    "vue-jest": "^4.0.0-0"
   }
 }
