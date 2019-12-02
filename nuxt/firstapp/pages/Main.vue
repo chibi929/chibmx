@@ -19,7 +19,7 @@
     <div class="columns">
       <div class="column is-3">
         <b-field label="Create counts">
-          <b-numberinput v-model="createCounts" min="1" />
+          <b-numberinput v-model="createCounts" min="1" @input="reset" />
         </b-field>
       </div>
       <div class="column is-3">
@@ -94,6 +94,11 @@ export default class Main extends Vue {
     this.initialCounts = this.$store.state.initialCounts;
     await this.$store.dispatch('updateOrganizations');
     this.orgs = [this.user].concat(this.$store.state.orgs);
+  }
+
+  private reset(): void {
+    this.selectedDates = null;
+    this.selectedDatesArray = [];
   }
 
   private get requestButtonDisabled(): boolean {
