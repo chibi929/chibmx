@@ -17,6 +17,12 @@ module.exports = {
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
   },
   /*
+   ** Middleware
+   */
+  router: {
+    middleware: 'sample'
+  },
+  /*
    ** Customize the progress-bar color
    */
   loading: { color: '#fff' },
