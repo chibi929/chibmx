@@ -55,6 +55,7 @@ export default {
       .$get('/api/test')
       .then((response) => {
         this.response = response.test;
+        console.log(this.response);
       })
       .catch((error) => {
         console.log(error);

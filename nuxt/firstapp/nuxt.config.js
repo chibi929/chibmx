@@ -68,5 +68,8 @@ module.exports = {
   server: {
     port: 4200,
     host: '0.0.0.0'
-  }
+  },
+  serverMiddleware: [
+    { path: '/api', handler: '~/server/index.ts' }
+  ]
 };
