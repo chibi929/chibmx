@@ -23,6 +23,11 @@ module.exports = {
     }],
     // note you must disable the base rule as it can report incorrect errors
     'no-unused-vars': 'off',
-    '@typescript-eslint/no-unused-vars': 'warn'
+    '@typescript-eslint/no-unused-vars': 'warn',
+    'space-before-function-paren': ['error', {
+      'anonymous': 'never',
+      'named': 'never',
+      'asyncArrow': 'always'
+    }]
   }
 }
