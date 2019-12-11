@@ -16,10 +16,13 @@ module.exports = {
   // add your custom rules here
   rules: {
     'nuxt/no-cjs-in-config': 'off',
-    "vue/html-self-closing": ["error", {
-      "html": {
-        "void": "always"
+    'vue/html-self-closing': ['error', {
+      html: {
+        void: 'always'
       }
-    }]
+    }],
+    // note you must disable the base rule as it can report incorrect errors
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': 'warn'
   }
 }
