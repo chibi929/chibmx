@@ -31,12 +31,14 @@
       </card>
     </div>
     <options :user="{ firstName: 'Chibi', lastName: 'Kinoko' }" />
+    <ClassAPIComponent :user="{ firstName: 'Chibi', lastName: 'Kinoko' }" />
   </section>
 </template>
 
 <script>
 import Card from '~/components/Card'
 import Options from '~/components/Options'
+import ClassAPIComponent from '~/components/Class'
 
 export default {
   name: 'HomePage',
@@ -44,6 +46,7 @@ export default {
   components: {
     Card,
     Options,
+    ClassAPIComponent
   }
 }
 </script>
