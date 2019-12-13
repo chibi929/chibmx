@@ -30,17 +30,20 @@
         No other internal dependency
       </card>
     </div>
+    <options :user="{ firstName: 'Chibi', lastName: 'Kinoko' }" />
   </section>
 </template>
 
 <script>
 import Card from '~/components/Card'
+import Options from '~/components/Options'
 
 export default {
   name: 'HomePage',
 
   components: {
-    Card
+    Card,
+    Options,
   }
 }
 </script>
