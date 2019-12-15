@@ -30,6 +30,8 @@ export default class ClassAPIComponent extends Vue {
       .catch((err) => {
         console.log(err)
       })
+
+    console.log(this.$store.state.counter)
   }
 }
 </script>
