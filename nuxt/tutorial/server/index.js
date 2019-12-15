@@ -8,6 +8,11 @@ const config = require('../nuxt.config.js')
 config.dev = process.env.NODE_ENV !== 'production'
 
 async function start() {
+  app.get('/test', (req, res, next) => {
+    const param = { test: 'Hello World!' }
+    res.send(param)
+  })
+
   // Init Nuxt.js
   const nuxt = new Nuxt(config)
 

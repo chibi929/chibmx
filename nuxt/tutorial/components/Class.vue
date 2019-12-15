@@ -19,5 +19,17 @@ export default class ClassAPIComponent extends Vue {
   get fullName(): string {
     return `${this.user.firstName} ${this.user.lastName}`
   }
+
+  mounted() {
+    console.log('mounted')
+    this.$axios
+      .get('/test')
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
 }
 </script>
