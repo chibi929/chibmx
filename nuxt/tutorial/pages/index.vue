@@ -32,6 +32,7 @@
     </div>
     <options :user="{ firstName: 'Chibi', lastName: 'Kinoko' }" />
     <ClassAPIComponent :user="{ firstName: 'Chibi', lastName: 'Kinoko' }" />
+    <Composition :user="{ firstName: 'Chibi', lastName: 'Kinoko' }" />
   </section>
 </template>
 
@@ -39,6 +40,7 @@
 import Card from '~/components/Card'
 import Options from '~/components/Options'
 import ClassAPIComponent from '~/components/Class'
+import Composition from '~/components/Composition'
 
 export default {
   name: 'HomePage',
@@ -46,7 +48,8 @@ export default {
   components: {
     Card,
     Options,
-    ClassAPIComponent
+    ClassAPIComponent,
+    Composition
   }
 }
 </script>
