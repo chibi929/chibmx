@@ -58,5 +58,8 @@ module.exports = {
      ** You can extend webpack config here
      */
     extend(config, ctx) {}
-  }
+  },
+  serverMiddleware: [
+    { path: '/api', handler: '@/server/index.js' }
+  ]
 }
