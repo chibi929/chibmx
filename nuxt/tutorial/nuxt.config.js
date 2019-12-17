@@ -60,6 +60,6 @@ module.exports = {
     extend(config, ctx) {}
   },
   serverMiddleware: [
-    { path: '/api', handler: '@/server/index.js' }
+    { path: '/api', handler: '@/server/index.ts' }
   ]
 }
