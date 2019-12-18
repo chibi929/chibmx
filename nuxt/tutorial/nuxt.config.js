@@ -61,5 +61,11 @@ module.exports = {
   },
   serverMiddleware: [
     { path: '/api', handler: '@/server/index.ts' }
-  ]
+  ],
+  /*
+   ** Middleware
+   */
+  router: {
+    middleware: 'foo'
+  }
 }
