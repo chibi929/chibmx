@@ -4,6 +4,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
+import { exampleStore } from '~/store'
 
 interface User {
   firstName: string
@@ -32,6 +33,7 @@ export default class ClassAPIComponent extends Vue {
       })
 
     console.log(this.$store.state.counter)
+    console.log(exampleStore.counter)
   }
 }
 </script>
