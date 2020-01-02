@@ -1,2 +1,4 @@
 autopep8==1.4.4
+numpy==1.18.0
 obniz==0.5.1
+Pillow==6.2.1
